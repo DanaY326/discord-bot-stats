@@ -1,0 +1,19 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "Discord bot project",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanaY326/discord-bot.git"
+  },
+  "author": "DanaY326",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DanaY326/discord-bot/issues"
+  },
+  "homepage": "https://github.com/DanaY326/discord-bot#readme"
+}
