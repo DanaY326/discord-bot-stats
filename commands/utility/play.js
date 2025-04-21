@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { name } = require('../../events/interactionCreate');
 
 const compMove = 0;
 
@@ -14,20 +15,21 @@ module.exports = {
 		.addStringOption(option =>
 			option.setName('move')
 				.setDescription('The move you play.')
-				.setRequired(true)),
+				.setRequired(true))
+				.addChoices(
+					{ name: 'Rock', value: 0 },
+					{ name: 'Paper', value: 1 },
+					{ name: 'Scissors', value: 2 },
+					{ name: 'Gun', value: 3 },
+				));
     async execute(interaction) {
-        const moveName = interaction.options.getString('move', true).toLowerCase();
-		const moves = ["rock", "paper", "scissors"];
-		const gun = "gun";
-		const move = moves.indexOf(moveName);
+        const move = interaction.options.getInt('move', true);
+		const moves = ["rock", "paper", "scissors", "gun"];
+		const moveName = moves[move];
 
-		if (moveName === gun) {
+		if (moveName === "gun") {
             return interaction.reply(`You played ${moveName}. You win!`);
 		}
-
-        if (!moves.includes(moveName)) {
-            return interaction.reply(`There is no move with name \`${moveName}\`!`);
-        }
 
 		try {
 			compMove = getRandomInt(3);
