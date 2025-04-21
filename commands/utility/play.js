@@ -1,11 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
 
-var compMove = 0;
-
-function getRandomInt(amount) {
-	return Math.floor(Math.random() * amount);
-}
-
 module.exports = {
 	cooldown: 5,
 	data: new SlashCommandBuilder()
@@ -31,7 +25,8 @@ module.exports = {
 		}
 
 		try {
-			compMove = getRandomInt(3);
+			const randomFunction = (amount) => (Math.floor(Math.random() * amount));
+			const compMove = randomFunction(3);
 			if (move === compMove) {
 				return interaction.reply(`You played ${moveName} and the computer played ${moves[compMove]}. It's a tie!`);
 			} else if ((move - compMove + 3) % 3 === 1) {
