@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { cooldown } = require('./ping');
 
 module.exports = {
+    cooldown: 5,
 	data: new SlashCommandBuilder()
 		.setName('reload')
 		.setDescription('Reloads a command.')
