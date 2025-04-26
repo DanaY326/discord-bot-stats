@@ -19,7 +19,12 @@
   "dependencies": {
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
+<<<<<<< HEAD
     "tedious": "^18.6.1"
+=======
+    "msnodesqlv8": "^4.5.0",
+    "mssql": "^11.0.1"
+>>>>>>> ca62581a19ec308266d46e98c76aaebdb1f8d9b6
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",
