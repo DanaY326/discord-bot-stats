@@ -1,8 +1,9 @@
-const express = require("express");
+
+/*const express = require("express");
 const sql = require("mssql");
 const app = express();
-const sqlLogin = require("./config.json");
-const sqlPassword = require("./config.json");
+const sqlLogin = require("../config.json");
+const sqlPassword = require("../config.json");
 // SQL Server configuration
 var config = {
  "user": sqlLogin, // Database username
@@ -23,7 +24,7 @@ sql.connect(config, err => {
 // Define route for fetching data from SQL Server
 app.get("/", (request, response) => {
  // Execute a SELECT query
- new sql.Request().query("SELECT * FROM Employee", (err, result) => {
+ new sql.Request().query("SELECT * FROM dbo.Messages", (err, result) => {
  if (err) {
  console.error("Error executing query:", err);
  } else {
@@ -35,4 +36,4 @@ app.get("/", (request, response) => {
 // Start the server on port 3000
 app.listen(3000, () => {
  console.log("Listening on port 3000…");
-});
+});*/
