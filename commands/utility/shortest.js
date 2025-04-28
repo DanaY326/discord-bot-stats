@@ -14,34 +14,38 @@ module.exports = {
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
 		const memberCount = `${interaction.guild.memberCount}`;
-		// SQL Server configuration
-		var config = {
-			"user": sqlLogin, // Database username
-			"password": sqlPassword, // Database password
-			"server": "danascomputer", // Server IP address
-			"database": "discord-messages", // Database name,
-			"port": 1433,
-			pool: {
-			  max: 10,
-			  min: 0,
-			  idleTimeoutMillis: 30000
-			},
-			"options": {
-				"encrypt": false, // Disable encryption
-	        	trustServerCertificate: true
-			}
-		}
+		const value = 1;
 
-		try {
-			sql.connect(config, err => {
-			 if (err) {
-				throw err;
-			 }
-			 return interaction.reply("Connection Successful!");
-			});
-		} catch(error) {
-            console.error(error);
-            await interaction.reply(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);
+		// SQL Server configuration
+	var config = {
+		"user": sqlLogin, // Database username
+		"password": sqlPassword, // Database password
+		"server": "danascomputer", // Server IP address
+		"database": "discord-messages", // Database name,
+		"port": 1433,
+		pool: {
+			max: 10,
+			min: 0,
+			idleTimeoutMillis: 30000
+		},
+		"options": {
+			"encrypt": false, // Disable encryption
+			trustServerCertificate: true
 		}
+	}
+
+	try {
+		sql.connect(config, err => {
+			if (err) {
+				throw err;
+			}})
+			const result = await sql.query`USE [discord-messages] SELECT * FROM [dbo].[Messages]`;
+			console.log(result);
+			return interaction.reply(`${result}`);
+	} catch(error) {
+		console.error(error);
+		console.log(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);
+	}
+		
 	},
 };

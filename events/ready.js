@@ -36,7 +36,6 @@ module.exports = {
 			 if (err) {
 				throw err;
 			 }
-			 console.log("Connection to SQL Server Successful!");
 			});
 		} catch(error) {
             console.error(error);
