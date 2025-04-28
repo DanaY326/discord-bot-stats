@@ -9,8 +9,8 @@ const { sqlPassword } = require("../../config.json");
 module.exports = {
 	cooldown: 5,
 	data: new SlashCommandBuilder()
-		.setName('shortest')
-		.setDescription('Returns the shortest message in the server!'),
+		.setName('longest')
+		.setDescription('Returns the longest message in the server!'),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
 		const memberCount = `${interaction.guild.memberCount}`;
@@ -39,9 +39,9 @@ module.exports = {
 				if (err) {
 					throw err;
 				}})
-				const result = await sql.query`SELECT TOP 1 message, LEN(message) FROM dbo.Messages ORDER BY LEN(message) ASC, message ASC;`;
+				const result = await sql.query`SELECT TOP 1 message, LEN(message) FROM dbo.Messages ORDER BY LEN(message) DESC, message DESC;`;
 				console.log(result);
-				return interaction.reply(`The shortest message was '${Object.values(result.recordset[0])[0]}' with length ${Object.values(result.recordset[0])[1]}!`);
+				return interaction.reply(`The longest message was '${Object.values(result.recordset[0])[0]}' with length ${Object.values(result.recordset[0])[1]}!`);
 		} catch(error) {
 			console.error(error);
 			console.log(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);
