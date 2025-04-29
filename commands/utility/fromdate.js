@@ -44,9 +44,12 @@ module.exports = {
 				if (err) {
 					throw err;
 				}})
-				const result = await sql.query`SELECT message FROM dbo.Messages WHERE date_sent = ${date};`;
+				const dateStart = `${date} 00:00`;
+				const dateEnd = `${date} 23:59`;
+				const result = await sql.query`SELECT message FROM dbo.Messages WHERE date_sent >= ${dateStart} AND date_sent <= ${dateEnd} ORDER BY date_sent;`;
 				//console.log(result);
 				const messages = Object.values(result.recordset);
+				console.log(messages);
 				const len = messages.length;
 				var reply = '';
 				if (len == 0) {
@@ -56,7 +59,6 @@ module.exports = {
 					const mes = Object.values(messages[i])[0];
 					reply = reply + '\n' + mes;
 				}
-				console.log(reply);
 				return interaction.reply(`Chats from ${date}: ${reply}`);
 		} catch(error) {
 			console.error(error);
