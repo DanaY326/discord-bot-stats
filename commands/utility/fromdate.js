@@ -46,7 +46,7 @@ module.exports = {
 				}})
 				const dateStart = `${date} 00:00`;
 				const dateEnd = `${date} 23:59`;
-				const result = await sql.query`SELECT message FROM dbo.Messages WHERE date_sent >= ${dateStart} AND date_sent <= ${dateEnd} ORDER BY date_sent;`;
+				const result = await sql.query`SELECT message, RIGHT(CONVERT(NVARCHAR(255), date_sent), 8) FROM dbo.Messages WHERE date_sent >= ${dateStart} AND date_sent <= ${dateEnd} ORDER BY date_sent;`;
 				//console.log(result);
 				const messages = Object.values(result.recordset);
 				console.log(messages);
@@ -57,7 +57,8 @@ module.exports = {
 				}
 				for (let i = 0; i < len; ++i) {
 					const mes = Object.values(messages[i])[0];
-					reply = reply + '\n' + mes;
+					const time = Object.values(messages[i])[1];
+					reply = `${reply}\n(${time})    ${mes}`;
 				}
 				return interaction.reply(`Chats from ${date}: ${reply}`);
 		} catch(error) {
