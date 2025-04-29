@@ -9,11 +9,17 @@ const { sqlPassword } = require("../../config.json");
 module.exports = {
 	cooldown: 5,
 	data: new SlashCommandBuilder()
-		.setName('shortest')
-		.setDescription('Returns the shortest message in the server!'),
+		.setName('fromdate')
+		.setDescription('Returns all messages in the server from a specific date!')
+		.addStringOption(option =>
+			option.setName('date')
+				.setDescription('The date to get messages from.')
+				.setRequired(true)),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
 		const memberCount = `${interaction.guild.memberCount}`;
+		const value = 1;
+		const date = interaction.options.getString('date', true);
 
 		// SQL Server configuration
 		var config = {
@@ -38,13 +44,23 @@ module.exports = {
 				if (err) {
 					throw err;
 				}})
-				const result = await sql.query`SELECT TOP 1 message, LEN(message) FROM dbo.Messages ORDER BY LEN(message) ASC, message ASC;`;
-				console.log(result);
-				const message = Object.values(result.recordset[0]);
-				return interaction.reply(`The shortest message in ${serverName} is '${message[0]}' with length ${message[1]}!`);
+				const result = await sql.query`SELECT message FROM dbo.Messages WHERE date_sent = ${date};`;
+				//console.log(result);
+				const messages = Object.values(result.recordset);
+				const len = messages.length;
+				var reply = '';
+				if (len == 0) {
+					return interaction.reply(`No messages on ${date}.`);
+				}
+				for (let i = 0; i < len; ++i) {
+					const mes = Object.values(messages[i])[0];
+					reply = reply + '\n' + mes;
+				}
+				console.log(reply);
+				return interaction.reply(`Chats from ${date}: ${reply}`);
 		} catch(error) {
 			console.error(error);
-			console.log(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);
+			return interaction.reply(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);
 		}
 		
 	},

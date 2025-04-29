@@ -13,8 +13,6 @@ module.exports = {
 		.setDescription('Returns the longest message in the server!'),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
-		const memberCount = `${interaction.guild.memberCount}`;
-		const value = 1;
 
 		// SQL Server configuration
 		var config = {
@@ -41,7 +39,8 @@ module.exports = {
 				}})
 				const result = await sql.query`SELECT TOP 1 message, LEN(message) FROM dbo.Messages ORDER BY LEN(message) DESC, message DESC;`;
 				console.log(result);
-				return interaction.reply(`The longest message was '${Object.values(result.recordset[0])[0]}' with length ${Object.values(result.recordset[0])[1]}!`);
+				const message = Object.values(result.recordset[0]);
+				return interaction.reply(`The longest message in ${serverName} is '${message[0]}' with length ${message[1]}!`);
 		} catch(error) {
 			console.error(error);
 			console.log(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);
