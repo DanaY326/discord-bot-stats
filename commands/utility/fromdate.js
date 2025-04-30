@@ -58,7 +58,7 @@ module.exports = {
 				for (let i = 0; i < len; ++i) {
 					const mes = Object.values(messages[i])[0];
 					const time = Object.values(messages[i])[1];
-					reply = `${reply}\n(${time})    ${mes}`;
+					reply = reply + `\n(${time})    ${mes}`;
 				}
 				return interaction.reply(`Chats from ${date}: ${reply}`);
 		} catch(error) {
