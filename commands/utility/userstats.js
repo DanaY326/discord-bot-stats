@@ -40,11 +40,12 @@ module.exports = {
 				if (err) {
 					throw err;
 				}})
-				const numMessages = await sql.query`SELECT COUNT(id) FROM dbo.Messages`;
-				console.log(numMessages);
+				const numMessagesRes = await sql.query`SELECT COUNT(id) FROM dbo.Messages`;
+				const numMessages = Object.values(numMessagesRes.recordset[0]);
 				
-				const numUsers = await sql.query`SELECT COUNT(id) FROM dbo.Users`;
-				console.log(numUsers);
+				const numUsersRes = await sql.query`SELECT COUNT(id) FROM dbo.Users`;
+				console.log(numUsersRes);
+				const numUsers = Object.values(numUsersRes.recordset[0]);
 
 				/*const top = interaction.options.getInteger('number', false);
 				const result = '';
@@ -68,11 +69,14 @@ module.exports = {
 					const userId = Object.values(messages[i])[0];
 					const userArr = await sql.query`SELECT userName FROM dbo.Users WHERE id = ${userId};`
 					console.log(userArr);
-					const user = Object.values(userArr.recordset)[0];
-					console.log(user);
-					reply = reply + '\n' + Object.values(user);
+					const userObj = Object.values(userArr.recordset)[0];
+					console.log(userObj);
+
+					const mesNum = Object.values(messages[i])[1];
+
+					reply = reply + `\n(${mesNum / numMessages * 100}%)       ${Object.values(userObj)}`;
 				}
-				return interaction.reply(`Users: ${reply}`);
+				return interaction.reply(`Users by percentage of messages: ${reply}`);
 		} catch(error) {
 			console.error(error);
 			console.log(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);

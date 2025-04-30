@@ -49,7 +49,7 @@ module.exports = {
 				const result = await sql.query`SELECT message, RIGHT(CONVERT(NVARCHAR(255), date_sent), 8) FROM dbo.Messages WHERE date_sent >= ${dateStart} AND date_sent <= ${dateEnd} ORDER BY date_sent;`;
 				//console.log(result);
 				const messages = Object.values(result.recordset);
-				console.log(messages);
+				//console.log(messages);
 				const len = messages.length;
 				var reply = '';
 				if (len == 0) {
