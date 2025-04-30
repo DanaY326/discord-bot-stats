@@ -10,10 +10,10 @@ module.exports = {
 	cooldown: 5,
 	data: new SlashCommandBuilder()
 		.setName('userstats')
-		.setDescription('Returns the top 10 biggest users in the server!')
+		.setDescription('Returns the biggest contributers (yappers) in the server!')
 		.addIntegerOption(option =>
-			option.setName('amount')
-				.setDescription('The number of top users to give data for.')),
+			option.setName('number_of_users')
+				  .setDescription('The number of top users to give data for (default 10).')),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
 
@@ -42,24 +42,23 @@ module.exports = {
 				}})
 				const numMessagesRes = await sql.query`SELECT COUNT(id) FROM dbo.Messages`;
 				const numMessages = Object.values(numMessagesRes.recordset[0]);
+				//console.log(numMessages);
 				
 				const numUsersRes = await sql.query`SELECT COUNT(id) FROM dbo.Users`;
-				console.log(numUsersRes);
+				//console.log(numUsersRes);
 				const numUsers = Object.values(numUsersRes.recordset[0]);
+				//console.log(numUsers);
 
-				/*const top = interaction.options.getInteger('number', false);
-				const result = '';
-				console.log(top);
-				if (top == 'null') {
-					sql.input('top', sql.Int, numUsers);
-				} else {
-					sql.input('top', sql.Int, top);
-				}
-				*/
-				result = await sql.query`SELECT TOP 10 userId, COUNT(userId) AS numMes FROM dbo.Messages GROUP BY userId ORDER BY COUNT(userId) DESC;`;
-				console.log(result);
+				const top = interaction.options.getInteger('number_of_users') ?? 10;
+				//console.log(top);
+/*
+				await sql.query``;
+				await sql.query``;*/
+				
+				result = await sql.query`DECLARE @topNum int; SET @topNum = ${top}; SELECT TOP (@topNum) userId, COUNT(userId) AS numMes FROM dbo.Messages GROUP BY userId ORDER BY COUNT(userId) DESC;`;
+				//console.log(result);
 				const messages = Object.values(result.recordset);
-				console.log(messages);
+				//console.log(messages);
 				const len = messages.length;
 				var reply = '';
 				if (len == 0) {
@@ -68,9 +67,9 @@ module.exports = {
 				for (let i = 0; i < len; ++i) {
 					const userId = Object.values(messages[i])[0];
 					const userArr = await sql.query`SELECT userName FROM dbo.Users WHERE id = ${userId};`
-					console.log(userArr);
+					//console.log(userArr);
 					const userObj = Object.values(userArr.recordset)[0];
-					console.log(userObj);
+					//console.log(userObj);
 
 					const mesNum = Object.values(messages[i])[1];
 
