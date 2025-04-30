@@ -10,7 +10,7 @@ module.exports = {
 	cooldown: 5,
 	data: new SlashCommandBuilder()
 		.setName('userstats')
-		.setDescription('Returns information about the messages of different users!')
+		.setDescription('Returns the top 10 biggest users in the server!')
 		.addIntegerOption(option =>
 			option.setName('amount')
 				.setDescription('The number of top users to give data for.')),
@@ -56,7 +56,7 @@ module.exports = {
 					sql.input('top', sql.Int, top);
 				}
 				*/
-				result = await sql.query`SELECT userId, COUNT(userId) AS numMes FROM dbo.Messages GROUP BY userId ORDER BY COUNT(userId) DESC;`;
+				result = await sql.query`SELECT TOP 10 userId, COUNT(userId) AS numMes FROM dbo.Messages GROUP BY userId ORDER BY COUNT(userId) DESC;`;
 				console.log(result);
 				const messages = Object.values(result.recordset);
 				console.log(messages);
