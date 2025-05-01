@@ -13,6 +13,7 @@ module.exports = {
 		.setDescription('Imports all data from the server!'),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
+		const memberCount = `${interaction.guild.memberCount}`;
 
 		// SQL Server configuration
 		var config = {
@@ -33,6 +34,12 @@ module.exports = {
 		}
 
 		try {
+			let msgs = [];
+			message.channel.messages.fetch({limit: 10})
+			.then(messages => {
+				return messages.each(msg => msgs.push(msg.content));
+			})
+			console.log(msgs);
 			sql.connect(config, err => {
 				if (err) {
 					throw err;
