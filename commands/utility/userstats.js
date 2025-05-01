@@ -51,7 +51,6 @@ module.exports = {
 
 				const top = Math.min(numUsers, interaction.options.getInteger('number_of_users') ??  10);
 				//console.log(top);
-			// make this and other error messages ephemeral
 				if (top <= 0) {
 					return interaction.reply({content: `No data available for "number_of_users" less than 1!`, flags: MessageFlags.Ephemeral});
 				}
