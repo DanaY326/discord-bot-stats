@@ -1,4 +1,4 @@
-# Rock-Paper-Scissors Discord Bot
+# Message Data Discord Bot
 This is a Discord Bot that you can play rock paper scissors with. Be sure to include a link and a screenshot (we're front end devs so we can actually see our work!).
 
 **Link to project:** http://recruiters-love-seeing-live-demos.com/
@@ -9,7 +9,7 @@ This is a Discord Bot that you can play rock paper scissors with. Be sure to inc
 
 **Tech used:** HTML, CSS, JavaScript, Node.js, Discord.js
 
-Here's where you can go to town on how you actually built this thing. Write as much as you can here, it's totally fine if it's not too much just make sure you write *something*. If you don't have too much experience on your resume working on the front end that's totally fine. This is where you can really show off your passion and make up for that ten fold.
+[Here's where you can go to town on how you actually built this thing. Write as much as you can here, it's totally fine if it's not too much just make sure you write *something*. If you don't have too much experience on your resume working on the front end that's totally fine. This is where you can really show off your passion and make up for that ten fold.] :#
 
 ## Optimizations
 *(optional)*
