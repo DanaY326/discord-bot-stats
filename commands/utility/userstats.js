@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const express = require("express");
 const sql = require("mssql");
 //const app = express();
@@ -53,11 +53,8 @@ module.exports = {
 				//console.log(top);
 			// make this and other error messages ephemeral
 				if (top <= 0) {
-					return interaction.reply(`No data available for "number_of_users" less than 1!`);
+					return interaction.reply({content: `No data available for "number_of_users" less than 1!`, flags: MessageFlags.Ephemeral});
 				}
-/*
-				await sql.query``;
-				await sql.query``;*/
 				
 				result = await sql.query`DECLARE @topNum int; SET @topNum = ${top}; SELECT TOP (@topNum) userId, COUNT(userId) AS numMes FROM dbo.Messages GROUP BY userId ORDER BY COUNT(userId) DESC;`;
 				//console.log(result);
@@ -66,7 +63,7 @@ module.exports = {
 				const len = messages.length;
 				var reply = '';
 				if (len == 0) {
-					return interaction.reply(`No readable users in server.`);
+					return interaction.reply({content: `No readable users in server.`, flags: MessageFlags.Ephemeral}); // not testsed
 				}
 				for (let i = 0; i < len; ++i) {
 					const userId = Object.values(messages[i])[0];
