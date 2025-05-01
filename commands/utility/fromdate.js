@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const express = require("express");
 const sql = require("mssql");
 //const app = express();
@@ -53,7 +53,7 @@ module.exports = {
 				const len = messages.length;
 				var reply = '';
 				if (len == 0) {
-					return interaction.reply(`No messages on ${date}.`);
+					return interaction.reply({content: `No messages on ${date}.`, flags: MessageFlags.Ephemeral});
 				}
 				for (let i = 0; i < len; ++i) {
 					const mes = Object.values(messages[i])[0];
@@ -63,7 +63,7 @@ module.exports = {
 				return interaction.reply(`Chats from ${date}: ${reply}`);
 		} catch(error) {
 			console.error(error);
-			return interaction.reply(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);
+			return interaction.reply({content: `There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``, flags: MessageFlags.Ephemeral});
 		}
 		
 	},
