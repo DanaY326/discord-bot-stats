@@ -9,11 +9,10 @@ const { sqlPassword } = require("../../config.json");
 module.exports = {
 	cooldown: 5,
 	data: new SlashCommandBuilder()
-		.setName('shortest')
-		.setDescription('Returns the shortest message in the server!'),
+		.setName('import')
+		.setDescription('Imports all data from the server!'),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
-		const memberCount = `${interaction.guild.memberCount}`;
 
 		// SQL Server configuration
 		var config = {
@@ -38,10 +37,10 @@ module.exports = {
 				if (err) {
 					throw err;
 				}})
-				const result = await sql.query`SELECT TOP 1 message, LEN(message) FROM dbo.Messages ORDER BY LEN(message) ASC, message ASC;`;
+				const result = await sql.query`SELECT TOP 1 message, LEN(message) FROM dbo.Messages ORDER BY LEN(message) DESC, message DESC;`;
 				console.log(result);
 				const message = Object.values(result.recordset[0]);
-				return await interaction.reply(`The shortest message in ${serverName} is '${message[0]}' with length ${message[1]}!`);
+				return await interaction.reply(`The longest message in ${serverName} is '${message[0]}' with length ${message[1]}!`);
 		} catch(error) {
 			console.error(error);
 			console.log(`Error:\n\`${error.message}\``);

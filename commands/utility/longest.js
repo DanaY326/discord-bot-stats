@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const express = require("express");
 const sql = require("mssql");
 //const app = express();
@@ -40,10 +40,11 @@ module.exports = {
 				const result = await sql.query`SELECT TOP 1 message, LEN(message) FROM dbo.Messages ORDER BY LEN(message) DESC, message DESC;`;
 				console.log(result);
 				const message = Object.values(result.recordset[0]);
-				return interaction.reply(`The longest message in ${serverName} is '${message[0]}' with length ${message[1]}!`);
+				return await interaction.reply(`The longest message in ${serverName} is '${message[0]}' with length ${message[1]}!`);
 		} catch(error) {
 			console.error(error);
-			console.log(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);
+			console.log(`Error:\n\`${error.message}\``);
+            return interaction.reply({content: `There was an error while executing this command!`, flags: MessageFlags.Ephemeral});
 		}
 		
 	},

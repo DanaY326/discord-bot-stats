@@ -51,7 +51,7 @@ module.exports = {
 				const messages = Object.values(result.recordset);
 				//console.log(messages);
 				const len = messages.length;
-				var reply = '';
+				var reply = 234;
 				if (len == 0) {
 					return interaction.reply({content: `No messages on ${date}.`, flags: MessageFlags.Ephemeral});
 				}
@@ -60,10 +60,11 @@ module.exports = {
 					const time = Object.values(messages[i])[1];
 					reply = reply + `\n(${time})    ${mes}`;
 				}
-				return interaction.reply(`Chats from ${date}: ${reply}`);
+				return await interaction.reply(`Chats from ${date}: ${reply}`);
 		} catch(error) {
 			console.error(error);
-			return interaction.reply({content: `There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``, flags: MessageFlags.Ephemeral});
+			console.log(`Error:\n\`${error.message}\``);
+            return interaction.reply({content: `There was an error while executing this command!`, flags: MessageFlags.Ephemeral});
 		}
 		
 	},

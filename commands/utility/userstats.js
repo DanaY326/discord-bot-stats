@@ -76,14 +76,15 @@ module.exports = {
 					reply = reply + `\n(${mesNum / numMessages * 100}%)       ${Object.values(userObj)}`;
 				}
 				if (top == numUsers) {
-					return interaction.reply(`${top} active user(s) by percentages of messages: ${reply}`);
+					return await interaction.reply(`${top} active user(s) by percentages of messages: ${reply}`);
 				} else {
-					return interaction.reply(`Top ${top} active user(s) by percentages of messages: ${reply}`);
+					return await interaction.reply(`Top ${top} active user(s) by percentages of messages: ${reply}`);
 				}
 				
 		} catch(error) {
 			console.error(error);
-			console.log(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);
+			console.log(`Error:\n\`${error.message}\``);
+            return interaction.reply({content: `There was an error while executing this command!`, flags: MessageFlags.Ephemeral});
 		}
 		
 	},
