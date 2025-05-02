@@ -28,14 +28,14 @@ module.exports = {
 				idleTimeoutMillis: 30000
 			},
 			"options": {
-				"encrypt": false, // Disable encryption
+				"encrypt": true, // Disable encryption
 				trustServerCertificate: true
 			}
 		}
 
 		try {
 			let msgs = [];
-			message.channel.messages.fetch({limit: 10})
+			message.channel.messages.fetch()
 			.then(messages => {
 				return messages.each(msg => msgs.push(msg.content));
 			})

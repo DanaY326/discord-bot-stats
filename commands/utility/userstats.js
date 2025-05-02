@@ -30,7 +30,7 @@ module.exports = {
 				idleTimeoutMillis: 30000
 			},
 			"options": {
-				"encrypt": false, // Disable encryption
+				"encrypt": true, // Disable encryption
 				trustServerCertificate: true
 			}
 		}
