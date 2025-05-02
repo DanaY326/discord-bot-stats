@@ -13,7 +13,6 @@ module.exports = {
     name: Events.ClientReady,
     once: true,
     execute(client) {
-	    console.log(`Ready! Logged in as ${client.user.tag}`);
 		var config = {
 			"user": sqlLogin, // Database username
 			"password": sqlPassword, // Database password
@@ -26,7 +25,7 @@ module.exports = {
 			  idleTimeoutMillis: 30000
 			},
 			"options": {
-				"encrypt": true, // Disable encryption
+				"encrypt": true, 
 	        	trustServerCertificate: true
 			}
 		}
@@ -35,11 +34,12 @@ module.exports = {
 			sql.connect(config, err => {
 			 if (err) {
 				throw err;
-			 }
-			});
+			 }});
+			 console.log(`Ready! Logged in as ${client.user.tag}`);
 		} catch(error) {
             console.error(error);
-            console.log(`There was an error while reloading a command \`${command.data.name}\`:\n\`${error.message}\``);
+            console.log(`There was an error connecting to the server!`);
+			return interaction.reply({content: `There was an error initializing the bot!`, flags: MessageFlags.Ephemeral});
 		}
     }
 };
