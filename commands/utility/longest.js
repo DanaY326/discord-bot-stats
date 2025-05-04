@@ -1,10 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const express = require("express");
 const sql = require("mssql");
-//const app = express();
-
-const { sqlLogin } = require("../../config.json");
-const { sqlPassword } = require("../../config.json");
 
 module.exports = {
 	cooldown: 5,

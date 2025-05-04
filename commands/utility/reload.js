@@ -26,7 +26,7 @@ module.exports = {
         } catch (error) {
             console.error(error);
 			console.log(`Error:\n\`${error.message}\``);
-            return interaction.reply({content: `There was an error while executing this command!`, flags: MessageFlags.Ephemeral});
+            return interaction.reply({content: `There was an error while reloading a command!`, flags: MessageFlags.Ephemeral});
         }
     },
 };
