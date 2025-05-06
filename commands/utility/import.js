@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags, Client } = require('discord.js');
 const sql = require("mssql");
-const guildId = require("../../config.json");
+const { guildId } = require("../../config.json");
 
 module.exports = {
 	cooldown: 5,
@@ -10,24 +10,29 @@ module.exports = {
 	async execute(interaction) {
 		const memberCount = `${interaction.guild.memberCount}`;
 		try {
-			console.log(client);
-			//let channel = `${interaction.guild.name}`;
+			//console.log(client);
+			let guildIdReal = interaction.guild.id;
+			/*console.log(interaction.guild);
+			console.log("=-=-=-=-=-=-=");
+			console.log(interaction.guild.id);*/
 			//console.log(channel);
-			let channel = client.channels.cache.get(guildId);
+			let channel = client.channels.cache.get('1358621798195003606');
 			let msgs = [];
-			console.log(channel);
-			channel.messages.fetch({ limit: 1 })
+			//console.log("=-=-=-=-=-=-=");
+			//console.log(client.channels.cache);
+			//console.log(channel);
+			await channel.messages.fetch({ limit: 100 })
 			.then(messages => {
-				let lastMessage = messages.first();
-				
-				if (!lastMessage.author.bot) {
-				  // The author of the last message wasn't a bot
-					console.log(lastMessage);
-					return interaction.reply(`bldjfsdlkfs${lastMessage}`);  // Print all messages
-				}
-			  })
+				//console.log(messages);
+				messages.forEach(message => {
+					//console.log(`${message.content}`);
+					if (!message.author.bot) {
+						msgs.push(message.content);
+					} 
+				})
+			  });
 			console.log(msgs);
-			return await interaction.reply(`bldjfsdlkfs${msgs}`);  // Print all messages
+			return await interaction.reply(`Messages:\n${msgs}`);  // Print all messages
 		} catch(error) {
 			console.error(error);
 			console.log(`Error:\n\`${error.message}\``);
