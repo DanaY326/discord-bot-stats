@@ -18,8 +18,11 @@ module.exports = {
 			let channels = client.channels.cache.filter(ch => {
 				return ch.guild.id === guildIdReal && ch.lastMessageId != null;
 			})
+			console.log(channels);
 
-			channels.forEach(channel => {
+			for await (let channelArr of channels) {
+				channel = channelArr[1];
+				console.log(channel);
 				let ptr = await channel.messages.fetch({ limit: 1 })
 				.then(messages => (messages.size === 1 ? messages.first() : null));
 
@@ -31,7 +34,7 @@ module.exports = {
 								if (!message.author.bot) {
 									msgs.push(message.content);
 									usrs.push(message.author.username);
-									const dt = new Date(message.createdTimestamp * 1000).toLocaleString("en-US")
+									const dt = new Date(message.createdTimestamp * 1000).toLocaleString("en-US");
 									dts.push(dt);
 								} 
 							})
@@ -39,9 +42,9 @@ module.exports = {
 						});
 						
 				}
-			})
+			}
 
-			//console.log(msgs + " \n" + usrs + " \n" + dts);
+			console.log(msgs + " \n" + usrs + " \n" + dts);
 			interaction.editReply(`Messages:\n${msgs}`);  // Print all messages
 			return;
 		} catch(error) {
