@@ -36,7 +36,7 @@ module.exports = {
 				const userRes = await sql.query`SELECT username FROM dbo.Users WHERE id = ${userId};`;
 				const user = Object.values(Object.values(userRes.recordset)[0])[0];
 
-				reply = reply + `\n(${time}) (${user})    ${mes}`;
+				reply = reply + `\n(${time})   (${user})    ${mes}`;
 			}
 			return await interaction.reply(`Chats from ${date}: ${reply}`);
 		} catch(error) {

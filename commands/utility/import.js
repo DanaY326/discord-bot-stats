@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags, Client, Message } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags, Client, Message, TextChannel } = require('discord.js');
 const sql = require("mssql");
 const { guildId } = require("../../config.json");
 
@@ -10,26 +10,27 @@ module.exports = {
 	async execute(interaction) {
 		const memberCount = `${interaction.guild.memberCount}`;
 		try {
-			//console.log(client);
 			let guildIdReal = interaction.guild.id;
-			/*console.log(interaction.guild);
 			console.log("=-=-=-=-=-=-=");
-			console.log(interaction.guild.id);*/
-			//console.log(channel);
-			let channel = client.channels.cache.get('1358621798195003606');
+			//console.log(guildIdReal);
+			let channels = client.channels.cache.filter(ch => {
+				console.log(typeof ch);
+				return ch.guild.id === guildIdReal && typeof ch === TextChannel;
+			})
+			//let channel = client.channels.cache.get('1358621798195003606');
 			let msgs = [];
 			let usrs = [];
 			let dts = [];
-			//console.log("=-=-=-=-=-=-=");
 			//console.log(client.channels.cache);
-			//console.log(channel);
+			console.log("=-=-=-=-=-=-=");
+			console.log(channels);
 
 			await interaction.deferReply();
 
-			let ptr = await channel.messages.fetch({ limit: 1 })
-				.then(messages => (messages.size === 1 ? messages.first() : null));
+			/*let ptr = await channel.messages.fetch({ limit: 1 })
+				.then(messages => (messages.size === 1 ? messages.first() : null));*/
 
-			while (ptr) {
+			/*while (ptr) {
 				await channel.messages
 					.fetch({ limit: 100, before: ptr.id })
 					.then(messages => {
@@ -37,12 +38,13 @@ module.exports = {
 							if (!message.author.bot) {
 								msgs.push(message.content);
 								usrs.push(message.author.username);
-								dts.push(message.createdTimestamp);
+								const dt = new Date(message.createdTimestamp * 1000).toLocaleString("en-US")
+								dts.push(dt);
 							} 
 						})
 						ptr = 0 < messages.size ? messages.at(messages.size - 1) : null;
 					});
-			}
+			}*/
 
 			//console.log(msgs + " \n" + usrs + " \n" + dts);
 			interaction.editReply(`Messages:\n${msgs}`);  // Print all messages
