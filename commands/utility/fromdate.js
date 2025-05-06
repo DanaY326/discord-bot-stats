@@ -19,19 +19,24 @@ module.exports = {
 		try {
 			const dateStart = `${date} 00:00`;
 			const dateEnd = `${date} 23:59`;
-			const result = await sql.query`SELECT message, RIGHT(CONVERT(NVARCHAR(255), date_sent), 8) FROM dbo.Messages WHERE date_sent >= ${dateStart} AND date_sent <= ${dateEnd} ORDER BY date_sent;`;
+			const result = await sql.query`SELECT message, RIGHT(CONVERT(NVARCHAR(255), date_sent), 8), userId FROM dbo.Messages WHERE date_sent >= ${dateStart} AND date_sent <= ${dateEnd} ORDER BY date_sent;`;
 			//console.log(result);
 			const messages = Object.values(result.recordset);
 			//console.log(messages);
 			const len = messages.length;
-			var reply = 234;
+			var reply = '';
 			if (len == 0) {
 				return interaction.reply({content: `No messages on ${date}.`, flags: MessageFlags.Ephemeral});
 			}
 			for (let i = 0; i < len; ++i) {
 				const mes = Object.values(messages[i])[0];
 				const time = Object.values(messages[i])[1];
-				reply = reply + `\n(${time})    ${mes}`;
+
+				const userId = Object.values(messages[i])[2];
+				const userRes = await sql.query`SELECT username FROM dbo.Users WHERE id = ${userId};`;
+				const user = Object.values(Object.values(userRes.recordset)[0])[0];
+
+				reply = reply + `\n(${time}) (${user})    ${mes}`;
 			}
 			return await interaction.reply(`Chats from ${date}: ${reply}`);
 		} catch(error) {

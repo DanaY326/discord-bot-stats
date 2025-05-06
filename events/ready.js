@@ -11,7 +11,7 @@ module.exports = {
     name: Events.ClientReady,
     once: true,
     execute(client) {
-		var config = {
+		/*var config = {
 			"user": sqlLogin, // Database username
 			"password": sqlPassword, // Database password
 			"server": "danascomputer", // Server IP address
@@ -26,13 +26,13 @@ module.exports = {
 				"encrypt": true, 
 	        	trustServerCertificate: true
 			}
-		}
+		}*/
 
 		try {
-			sql.connect(config, err => {
+			/*sql.connect(config, err => {
 			 if (err) {
 				throw err;
-			 }});
+			 }});*/
 			 console.log(`Ready! Logged in as ${client.user.tag}`);
 		} catch(error) {
             console.error(error);

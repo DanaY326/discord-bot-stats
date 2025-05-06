@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags, Client } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags, Client, Message } = require('discord.js');
 const sql = require("mssql");
 const { guildId } = require("../../config.json");
 
@@ -18,21 +18,35 @@ module.exports = {
 			//console.log(channel);
 			let channel = client.channels.cache.get('1358621798195003606');
 			let msgs = [];
+			let usrs = [];
+			let dts = [];
 			//console.log("=-=-=-=-=-=-=");
 			//console.log(client.channels.cache);
 			//console.log(channel);
-			await channel.messages.fetch({ limit: 100 })
-			.then(messages => {
-				//console.log(messages);
-				messages.forEach(message => {
-					//console.log(`${message.content}`);
-					if (!message.author.bot) {
-						msgs.push(message.content);
-					} 
-				})
-			  });
-			console.log(msgs);
-			return await interaction.reply(`Messages:\n${msgs}`);  // Print all messages
+
+			await interaction.deferReply();
+
+			let ptr = await channel.messages.fetch({ limit: 1 })
+				.then(messages => (messages.size === 1 ? messages.first() : null));
+
+			while (ptr) {
+				await channel.messages
+					.fetch({ limit: 100, before: ptr.id })
+					.then(messages => {
+						messages.forEach(message => {
+							if (!message.author.bot) {
+								msgs.push(message.content);
+								usrs.push(message.author.username);
+								dts.push(message.createdTimestamp);
+							} 
+						})
+						ptr = 0 < messages.size ? messages.at(messages.size - 1) : null;
+					});
+			}
+
+			//console.log(msgs + " \n" + usrs + " \n" + dts);
+			interaction.editReply(`Messages:\n${msgs}`);  // Print all messages
+			return;
 		} catch(error) {
 			console.error(error);
 			console.log(`Error:\n\`${error.message}\``);
