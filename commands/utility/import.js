@@ -8,25 +8,23 @@ module.exports = {
 		.setName('import')
 		.setDescription('Imports all data from the server!'),
 	async execute(interaction) {
+		await interaction.deferReply();
 		const memberCount = `${interaction.guild.memberCount}`;
 		try {
 			let guildIdReal = interaction.guild.id;
-			let channels = client.channels.cache.filter(ch => {
-				console.log(typeof ch);
-				return ch.guild.id === guildIdReal && ch.lastMessageId != null;
-			})
 			let msgs = [];
 			let usrs = [];
 			let dts = [];
-
-			await interaction.deferReply();
+			let channels = client.channels.cache.filter(ch => {
+				return ch.guild.id === guildIdReal && ch.lastMessageId != null;
+			})
 
 			channels.forEach(channel => {
-				let ptr = await channel.messages.fetch({ limit: 1 })
+				let ptr = (async () => (await channel.messages.fetch({ limit: 1 })))
 				.then(messages => (messages.size === 1 ? messages.first() : null));
 
 				while (ptr) {
-					await channel.messages
+					async () => (await channel.messages)
 						.fetch({ limit: 100, before: ptr.id })
 						.then(messages => {
 							messages.forEach(message => {
@@ -39,6 +37,7 @@ module.exports = {
 							})
 							ptr = 0 < messages.size ? messages.at(messages.size - 1) : null;
 						});
+						
 				}
 			})
 
@@ -48,7 +47,7 @@ module.exports = {
 		} catch(error) {
 			console.error(error);
 			console.log(`Error:\n\`${error.message}\``);
-            return interaction.reply({content: `There was an error while executing this command!`, flags: MessageFlags.Ephemeral});
+            interaction.editReply({content: `There was an error while executing this command!`, flags: MessageFlags.Ephemeral});
 		}
 		//return interaction.reply('Whoa');
 		
