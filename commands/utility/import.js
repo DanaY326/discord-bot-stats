@@ -20,11 +20,11 @@ module.exports = {
 			})
 
 			channels.forEach(channel => {
-				let ptr = (async () => (await channel.messages.fetch({ limit: 1 })))
+				let ptr = await channel.messages.fetch({ limit: 1 })
 				.then(messages => (messages.size === 1 ? messages.first() : null));
 
 				while (ptr) {
-					async () => (await channel.messages)
+					await channel.messages
 						.fetch({ limit: 100, before: ptr.id })
 						.then(messages => {
 							messages.forEach(message => {
