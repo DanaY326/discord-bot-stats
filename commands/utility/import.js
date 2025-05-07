@@ -18,15 +18,12 @@ module.exports = {
 			let channels = client.channels.cache.filter(ch => {
 				return ch.guild.id === guildIdReal && ch.lastMessageId != null;
 			})
-			console.log(channels);
 
 			for await (let channelArr of channels) {
-				channel = channelArr[1];
-				console.log(channel);
-				let ptr = await channel.messages.fetch({ limit: 1 })
-				.then(messages => (messages.size === 1 ? messages.first() : null));
+				const channel = channelArr[1];
+				let ptr = channel.lastMessageId;
 
-				while (ptr) {
+				do {
 					await channel.messages
 						.fetch({ limit: 100, before: ptr.id })
 						.then(messages => {
@@ -41,11 +38,11 @@ module.exports = {
 							ptr = 0 < messages.size ? messages.at(messages.size - 1) : null;
 						});
 						
-				}
+				} while (ptr);
 			}
 
-			console.log(msgs + " \n" + usrs + " \n" + dts);
-			interaction.editReply(`Messages:\n${msgs}`);  // Print all messages
+			//console.log(msgs + " \n" + usrs + " \n" + dts);
+			interaction.editReply(`Messages:\n${dts}`);  // Print all messages
 			return;
 		} catch(error) {
 			console.error(error);
