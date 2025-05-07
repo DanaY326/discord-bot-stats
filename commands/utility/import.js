@@ -2,6 +2,10 @@ const { SlashCommandBuilder, MessageFlags, Client, Message, TextChannel } = requ
 const sql = require("mssql");
 const { guildId } = require("../../config.json");
 
+const timestampToString = (timestamp) => {
+	const year = timestamp.getFullYear();
+}
+
 module.exports = {
 	cooldown: 5,
 	data: new SlashCommandBuilder()
@@ -31,7 +35,7 @@ module.exports = {
 								if (!message.author.bot) {
 									msgs.push(message.content);
 									usrs.push(message.author.username);
-									const dt = new Date(message.createdTimestamp * 1000).toString();
+									const dt = new Date(message.createdTimestamp * 1000).toLocaleString();
 									dts.push(dt);
 								} 
 							})
@@ -42,7 +46,7 @@ module.exports = {
 			}
 
 			//console.log(msgs + " \n" + usrs + " \n" + dts);
-			interaction.editReply(`Messages:\n${dts}`);  // Print all messages
+			interaction.editReply(`Messages:\n${new Date(1746593350).toString()}`);  // Print all messages
 			return;
 		} catch(error) {
 			console.error(error);
