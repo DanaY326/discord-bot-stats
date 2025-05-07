@@ -31,7 +31,7 @@ module.exports = {
 								if (!message.author.bot) {
 									msgs.push(message.content);
 									usrs.push(message.author.username);
-									const dt = new Date(message.createdTimestamp * 1000).toLocaleString("en-US");
+									const dt = new Date(message.createdTimestamp * 1000).toString();
 									dts.push(dt);
 								} 
 							})
