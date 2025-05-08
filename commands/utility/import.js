@@ -3,20 +3,20 @@ const sql = require("mssql");
 const { guildId } = require("../../config.json");
 
 const timestampToString = (timestamp) => {
-	const year = timestamp.getFullYear();
+
 }
 
 module.exports = {
 	cooldown: 5,
 	data: new SlashCommandBuilder()
 		.setName('import')
-		.setDescription('Imports all data from the server!'),
+		.setDescription('Imports message data from the server!'),
 	async execute(interaction) {
 		await interaction.deferReply();
 		const memberCount = `${interaction.guild.memberCount}`;
 		try {
 			let guildIdReal = interaction.guild.id;
-			let msgs = [];
+			/*let msgs = [];
 			let usrs = [];
 			let dts = [];
 			let channels = client.channels.cache.filter(ch => {
@@ -43,10 +43,12 @@ module.exports = {
 						});
 						
 				} while (ptr);
-			}
+			}*/
 
+			dtNew = new Date(1746593350);
+			
 			//console.log(msgs + " \n" + usrs + " \n" + dts);
-			interaction.editReply(`Messages:\n${new Date(1746593350).toString()}`);  // Print all messages
+			interaction.editReply(`Messages:\n${dtNew.getTimezoneOffset()}`);  // Print all messages
 			return;
 		} catch(error) {
 			console.error(error);
