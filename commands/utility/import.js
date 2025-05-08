@@ -6,16 +6,12 @@ const timestampToString = (timestamp) => {
 
 }
 
-sql.query`DECLARE @mes NVARCHAR(255), @usr NVARCHAR(255), @guild NVARCHAR(255), @ts INT, @guildId INT, @usrId INT, @dt SMALLDATETIME;`;
-sql.query`SELECT @guildId = id FROM dbo.Servers WHERE name = @guild;`;
-
 let msgs = [];
 let usrs = [];
 let dts = [];
 
 const d = new Date();
 let timeDiffSec = d.getTimezoneOffset() * 60;
-console.log(timeDiffSec)
 
 module.exports = {
 	cooldown: 5,
@@ -24,8 +20,13 @@ module.exports = {
 		.setDescription('Imports message data from the server!'),
 	async execute(interaction) {
 		await interaction.deferReply();
+		
 		const memberCount = `${interaction.guild.memberCount}`;
 		try {
+			await sql.query`DECLARE @mes NVARCHAR(255), @usr NVARCHAR(255), @guild NVARCHAR(255), @ts INT, @guildId INT, @usrId INT, @dt SMALLDATETIME;`;
+			await sql.query`SET @guild = ${interaction.guild.id};`;
+			await sql.query`SELECT @guildId = id FROM dbo.Servers WHERE name = N@guild;`;
+
 			let guildIdReal = interaction.guild.id;
 			let channels = client.channels.cache.filter(ch => {
 				return ch.guild.id === guildIdReal && ch.lastMessageId != null;
@@ -49,13 +50,13 @@ module.exports = {
 									sql.query`SET @mes = ${message.content}, 
 													@usr = ${message.author.username}, 
 													@ts = ${localTimeStamp};`;
-									sql.query`SELECT @usrId = id FROM dbo.Users WHERE name = @usr;`;
+									sql.query`SELECT @usrId = id FROM dbo.Users WHERE name = N@usr;`;
 									sql.query`SELECT @dt = DATEADD(second, @ts, '1970/01/01 00:00');`;
 
 									// add if statement for if message doesn't already exist
 									sql.query`IF NOT EXISTS 
 												(SELECT * FROM dbo.Messages 
-												 WHERE message = @mes 
+												 WHERE message = N@mes 
 												 		AND userId = @usrId 
 														AND date_sent = @dt 
 														AND guildId = @guildId)
@@ -63,7 +64,7 @@ module.exports = {
 													INSERT INTO dbo.Messages 
 														(message, userId, date_sent, guildId) 
 													VALUES 
-														(@mes, @usrId, @dt, @guildId) 
+														(N@mes, @usrId, @dt, @guildId) 
 												END;`;
 								}
 							})

@@ -8,11 +8,12 @@ module.exports = {
 		.setDescription('Returns the longest message in the server!'),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
+		console.log(serverName);
 
 		try {
 			const serverId = await sql.query`DECLARE @guild NVARCHAR(255); 
 												SET @guild = ${serverName}; 
-												SELECT id FROM dbo.Servers WHERE name = @serverName;`;
+												SELECT id FROM dbo.Guilds WHERE guildName = @guild;`;
 			const result = await sql.query`DECLARE @serverId int; 
 											SET @serverId = ${serverId}; 
 											SELECT TOP 1 message, LEN(message) 
