@@ -11,17 +11,21 @@ module.exports = {
 		console.log(serverName);
 
 		try {
-			const serverId = await sql.query`DECLARE @guild NVARCHAR(255); 
-												SET @guild = ${serverName}; 
-												SELECT id FROM dbo.Guilds WHERE guildName = @guild;`;
-			const result = await sql.query`DECLARE @serverId int; 
-											SET @serverId = ${serverId}; 
-											SELECT TOP 1 message, LEN(message) 
+			const result = await sql.query`DECLARE @guild NVARCHAR(255); 
+												DECLARE @serverId INT; 
+												SET @guild = ${serverName}; 			
+												SET @serverId = (SELECT id FROM dbo.Guilds WHERE guildName = @guild); 
+												
+												SELECT TOP 1 message, LEN(message) 
 												FROM dbo.Messages 
 												WHERE guildId = @serverId 
 												ORDER BY LEN(message) DESC, message DESC;`;
 			console.log(result);
-			const message = Object.values(result.recordset[0]);
+			mesObj = result.recordset[0];
+			if (mesObj == null) {
+				return await interaction.reply(`No messages found in server.`);
+			}
+			const message = Object.values(mesObj);
 			return await interaction.reply(`The longest message in ${serverName} is '${message[0]}' with length ${message[1]}!`);
 		} catch(error) {
 			console.error(error);

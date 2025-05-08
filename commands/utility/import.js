@@ -23,9 +23,6 @@ module.exports = {
 		
 		const memberCount = `${interaction.guild.memberCount}`;
 		try {
-			await sql.query`DECLARE @mes NVARCHAR(255), @usr NVARCHAR(255), @guild NVARCHAR(255), @ts INT, @guildId INT, @usrId INT, @dt SMALLDATETIME;`;
-			await sql.query`SET @guild = ${interaction.guild.id};`;
-			await sql.query`SELECT @guildId = id FROM dbo.Servers WHERE name = N@guild;`;
 
 			let guildIdReal = interaction.guild.id;
 			let channels = client.channels.cache.filter(ch => {
@@ -45,18 +42,30 @@ module.exports = {
 									msgs.push(message.content);
 									usrs.push(message.author.username);
 									const localTimeStamp = message.createdTimestamp - timeDiffSec;
+									console.log(localTimeStamp);
 									dts.push(dt);
 									
-									sql.query`SET @mes = ${message.content}, 
-													@usr = ${message.author.username}, 
-													@ts = ${localTimeStamp};`;
-									sql.query`SELECT @usrId = id FROM dbo.Users WHERE name = N@usr;`;
-									sql.query`SELECT @dt = DATEADD(second, @ts, '1970/01/01 00:00');`;
+									
+									sql.query`DECLARE @mes NVARCHAR(255), 
+														@usr NVARCHAR(255), 
+														@guild NVARCHAR(255), 
+														@ts INT, @guildId INT, 
+														@usrId INT, 
+														@dt SMALLDATETIME;
 
-									// add if statement for if message doesn't already exist
-									sql.query`IF NOT EXISTS 
+												SET @guild = ${interaction.guild.id},
+													@mes = ${message.content}, 
+													@usr = ${message.author.username}, 
+													@ts = ${localTimeStamp};
+
+												SELECT @usrId = id FROM dbo.Users WHERE name = @usr;
+												SELECT @dt = DATEADD(second, @ts, '1970/01/01 00:00');												
+												SELECT @guildId = id FROM dbo.Servers WHERE name = @guild;
+
+												SET;
+												IF NOT EXISTS 
 												(SELECT * FROM dbo.Messages 
-												 WHERE message = N@mes 
+												 WHERE message = @mes 
 												 		AND userId = @usrId 
 														AND date_sent = @dt 
 														AND guildId = @guildId)
@@ -64,7 +73,7 @@ module.exports = {
 													INSERT INTO dbo.Messages 
 														(message, userId, date_sent, guildId) 
 													VALUES 
-														(N@mes, @usrId, @dt, @guildId) 
+														(@mes, @usrId, @dt, @guildId) 
 												END;`;
 								}
 							})
