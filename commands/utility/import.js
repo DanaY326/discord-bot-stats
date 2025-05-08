@@ -1,10 +1,21 @@
-const { SlashCommandBuilder, MessageFlags, Client, Message, TextChannel } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags, Client, Message, TextChannel, time } = require('discord.js');
 const sql = require("mssql");
 const { guildId } = require("../../config.json");
 
 const timestampToString = (timestamp) => {
 
 }
+
+sql.query`DECLARE @mes NVARCHAR(255), @usr NVARCHAR(255), @guild NVARCHAR(255), @ts INT, @guildId INT, @usrId INT, @dt SMALLDATETIME;`;
+sql.query`SELECT @guildId = id FROM dbo.Servers WHERE name = @guild;`;
+
+let msgs = [];
+let usrs = [];
+let dts = [];
+
+const d = new Date();
+let timeDiffSec = d.getTimezoneOffset() * 60;
+console.log(timeDiffSec)
 
 module.exports = {
 	cooldown: 5,
@@ -16,9 +27,6 @@ module.exports = {
 		const memberCount = `${interaction.guild.memberCount}`;
 		try {
 			let guildIdReal = interaction.guild.id;
-			/*let msgs = [];
-			let usrs = [];
-			let dts = [];
 			let channels = client.channels.cache.filter(ch => {
 				return ch.guild.id === guildIdReal && ch.lastMessageId != null;
 			})
@@ -35,20 +43,40 @@ module.exports = {
 								if (!message.author.bot) {
 									msgs.push(message.content);
 									usrs.push(message.author.username);
-									const dt = new Date(message.createdTimestamp * 1000).toLocaleString();
+									const localTimeStamp = message.createdTimestamp - timeDiffSec;
 									dts.push(dt);
-								} 
+									
+									sql.query`SET @mes = ${message.content}, 
+													@usr = ${message.author.username}, 
+													@ts = ${localTimeStamp};`;
+									sql.query`SELECT @usrId = id FROM dbo.Users WHERE name = @usr;`;
+									sql.query`SELECT @dt = DATEADD(second, @ts, '1970/01/01 00:00');`;
+
+									// add if statement for if message doesn't already exist
+									sql.query`IF NOT EXISTS 
+												(SELECT * FROM dbo.Messages 
+												 WHERE message = @mes 
+												 		AND userId = @usrId 
+														AND date_sent = @dt 
+														AND guildId = @guildId)
+												BEGIN 
+													INSERT INTO dbo.Messages 
+														(message, userId, date_sent, guildId) 
+													VALUES 
+														(@mes, @usrId, @dt, @guildId) 
+												END;`;
+								}
 							})
 							ptr = 0 < messages.size ? messages.at(messages.size - 1) : null;
 						});
 						
 				} while (ptr);
-			}*/
+			}
 
 			dtNew = new Date(1746593350);
 			
 			//console.log(msgs + " \n" + usrs + " \n" + dts);
-			interaction.editReply(`Messages:\n${dtNew.getTimezoneOffset()}`);  // Print all messages
+			interaction.editReply(`Messages:\n${dts}`);  // Print all messages
 			return;
 		} catch(error) {
 			console.error(error);
