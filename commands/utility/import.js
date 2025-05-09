@@ -2,10 +2,6 @@ const { SlashCommandBuilder, MessageFlags, Client, Message, TextChannel, time } 
 const sql = require("mssql");
 const { guildId } = require("../../config.json");
 
-const timestampToString = (timestamp) => {
-
-}
-
 let msgs = [];
 let usrs = [];
 let dts = [];
@@ -20,6 +16,9 @@ module.exports = {
 		.setDescription('Imports message data from the server!'),
 	async execute(interaction) {
 		await interaction.deferReply();
+		const countObj = await sql.query`SELECT date_sent FROM dbo.Messages;`;
+		const count = Object.values(countObj.recordset[0])[0];
+		const date = (count == 0) ? 0 : new Date(countObj.recordset[0].date_sent);
 		
 		const memberCount = `${interaction.guild.memberCount}`;
 		try {
