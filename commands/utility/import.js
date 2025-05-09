@@ -1,10 +1,5 @@
 const { SlashCommandBuilder, MessageFlags, Client, Message, TextChannel, time } = require('discord.js');
 const sql = require("mssql");
-const { guildId } = require("../../config.json");
-
-let msgs = [];
-let usrs = [];
-let dts = [];
 
 const d = new Date();
 let timeDiffSec = d.getTimezoneOffset() * 60;
@@ -23,7 +18,25 @@ module.exports = {
 		const memberCount = `${interaction.guild.memberCount}`;
 		try {
 
+			await sql.query`DECLARE @guild NVARCHAR(255) = ${interaction.guild.name};
+												
+												IF NOT EXISTS 
+												(SELECT * FROM dbo.Guilds 
+												 WHERE guild_name = @guild)
+												BEGIN 
+													INSERT INTO dbo.Guilds 
+														(guild_name, kind) 
+													VALUES 
+														(@guild, 'SV') 
+												END;`;
+											
+			/*interaction.guild.members.fetch()
+				.then(member => {
+				//console.log(member);
+			})*/
+
 			let guildIdReal = interaction.guild.id;
+			
 			let channels = client.channels.cache.filter(ch => {
 				return ch.guild.id === guildIdReal && ch.lastMessageId != null;
 			})
@@ -37,42 +50,33 @@ module.exports = {
 						.fetch({ limit: 100, before: ptr.id })
 						.then(messages => {
 							messages.forEach(message => {
+								console.log(message);
 								if (!message.author.bot) {
-									msgs.push(message.content);
-									usrs.push(message.author.username);
-									const localTimeStamp = message.createdTimestamp - timeDiffSec;
-									console.log(localTimeStamp);
-									dts.push(dt);
+									const localTimeStamp = message.createdTimestamp / 1000 - timeDiffSec;
 									
-									
-									sql.query`DECLARE @mes NVARCHAR(255), 
-														@usr NVARCHAR(255), 
-														@guild NVARCHAR(255), 
-														@ts INT, @guildId INT, 
-														@usrId INT, 
+									sql.query`DECLARE @mes NVARCHAR(255) = ${message.content}, 
+														@usr NVARCHAR(255) = ${message.author.username}, 
+														@guild NVARCHAR(255) = ${interaction.guild.name}, 
+														@ts BIGINT = ${localTimeStamp}, 
+														@guild_id INT, 
+														@usr_id INT, 
 														@dt SMALLDATETIME;
 
-												SET @guild = ${interaction.guild.id},
-													@mes = ${message.content}, 
-													@usr = ${message.author.username}, 
-													@ts = ${localTimeStamp};
-
-												SELECT @usrId = id FROM dbo.Users WHERE name = @usr;
-												SELECT @dt = DATEADD(second, @ts, '1970/01/01 00:00');												
-												SELECT @guildId = id FROM dbo.Servers WHERE name = @guild;
-
-												SET;
+												SELECT @usr_id = id FROM dbo.Users WHERE user_name = @usr;
+												SET @dt = DATEADD(minute, @ts / 60, '1970/01/01 00:00');													
+												SELECT @guild_id = id FROM dbo.Guilds WHERE guild_name = @guild;
+												
 												IF NOT EXISTS 
 												(SELECT * FROM dbo.Messages 
 												 WHERE message = @mes 
-												 		AND userId = @usrId 
+												 		AND user_id = @usr_id 
 														AND date_sent = @dt 
-														AND guildId = @guildId)
+														AND guild_id = @guild_id)
 												BEGIN 
 													INSERT INTO dbo.Messages 
-														(message, userId, date_sent, guildId) 
+														(message, user_id, date_sent, guild_id) 
 													VALUES 
-														(@mes, @usrId, @dt, @guildId) 
+														(@mes, @usr_id, @dt, @guild_id) 
 												END;`;
 								}
 							})
@@ -82,10 +86,7 @@ module.exports = {
 				} while (ptr);
 			}
 
-			dtNew = new Date(1746593350);
-			
-			//console.log(msgs + " \n" + usrs + " \n" + dts);
-			interaction.editReply(`Messages:\n${dts}`);  // Print all messages
+			interaction.editReply({content: `Finished importing!`, flags: MessageFlags.Ephemeral});  // Print all messages
 			return;
 		} catch(error) {
 			console.error(error);

@@ -13,11 +13,11 @@ module.exports = {
         const serverName = `${interaction.guild.name}`;
 
 		try {
-			const numMessagesRes = await sql.query`SELECT COUNT(id) FROM dbo.Messages`;
+			const numMessagesRes = await sql.query`guild_id = @server_id SELECT COUNT(id) FROM dbo.Messages`;
 			const numMessages = Object.values(numMessagesRes.recordset[0]);
 			//console.log(numMessages);
 			
-			const numUsersRes = await sql.query`SELECT COUNT(DISTINCT userId) FROM dbo.Messages`;
+			const numUsersRes = await sql.query`SELECT COUNT(DISTINCT user_id) FROM dbo.Messages`;
 			//console.log(numUsersRes);
 			const numUsers = Object.values(numUsersRes.recordset[0]);
 			console.log(numUsers);
@@ -28,7 +28,7 @@ module.exports = {
 				return interaction.reply({content: `No data available for "number_of_users" less than 1!`, flags: MessageFlags.Ephemeral});
 			}
 			
-			result = await sql.query`DECLARE @topNum int; SET @topNum = ${top}; SELECT TOP (@topNum) userId, COUNT(userId) AS numMes FROM dbo.Messages GROUP BY userId ORDER BY COUNT(userId) DESC;`;
+			result = await sql.query`DECLARE @topNum int; SET @topNum = ${top}; SELECT TOP (@topNum) user_id, COUNT(user_id) AS numMes FROM dbo.Messages GROUP BY user_id ORDER BY COUNT(user_id) DESC;`;
 			//console.log(result);
 			const messages = Object.values(result.recordset);
 			//console.log(messages);
@@ -39,7 +39,7 @@ module.exports = {
 			}
 			for (let i = 0; i < len; ++i) {
 				const userId = Object.values(messages[i])[0];
-				const userArr = await sql.query`SELECT userName FROM dbo.Users WHERE id = ${userId};`
+				const userArr = await sql.query`SELECT display_name FROM dbo.Users WHERE id = ${userId};`
 				//console.log(userArr);
 				const userObj = Object.values(userArr.recordset)[0];
 				//console.log(userObj);

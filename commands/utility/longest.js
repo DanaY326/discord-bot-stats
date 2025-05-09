@@ -8,19 +8,19 @@ module.exports = {
 		.setDescription('Returns the longest message in the server!'),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
-		console.log(serverName);
+		//console.log(serverName);
 
 		try {
 			const result = await sql.query`DECLARE @guild NVARCHAR(255); 
-												DECLARE @serverId INT; 
+												DECLARE @server_id INT; 
 												SET @guild = ${serverName}; 			
-												SET @serverId = (SELECT id FROM dbo.Guilds WHERE guildName = @guild); 
+												SET @server_id = (SELECT id FROM dbo.Guilds WHERE guild_name = @guild); 
 												
 												SELECT TOP 1 message, LEN(message) 
-												FROM dbo.Messages 
-												WHERE guildId = @serverId 
-												ORDER BY LEN(message) DESC, message DESC;`;
-			console.log(result);
+													FROM dbo.Messages 
+													WHERE guild_id = @server_id 
+													ORDER BY LEN(message) DESC, message DESC;`;
+			//console.log(result);
 			mesObj = result.recordset[0];
 			if (mesObj == null) {
 				return await interaction.reply(`No messages found in server.`);

@@ -17,9 +17,17 @@ module.exports = {
 		const date = interaction.options.getString('date', true);
 
 		try {
-			const dateStart = `${date} 00:00`;
-			const dateEnd = `${date} 23:59`;
-			const result = await sql.query`SELECT message, RIGHT(CONVERT(NVARCHAR(255), date_sent), 8), userId FROM dbo.Messages WHERE date_sent >= ${dateStart} AND date_sent <= ${dateEnd} ORDER BY date_sent;`;
+			const result = await sql.query`DECLARE @date_start SMALLDATETIME = ${date};
+												DECLARE @guild NVARCHAR(255) = ${serverName}; 
+												DECLARE @server_id INT; 
+												SELECT @server_id = id FROM dbo.Guilds WHERE guild_name = @guild;
+												
+												SELECT message, RIGHT(CONVERT(NVARCHAR(255), date_sent), 7), user_id 
+													FROM dbo.Messages 
+													WHERE guild_id = @server_id 
+														AND date_sent >= @date_start
+														AND date_sent <= DATEADD(minute, 59, DATEADD(hour, 23, @date_start))
+													ORDER BY date_sent;`;
 			//console.log(result);
 			const messages = Object.values(result.recordset);
 			//console.log(messages);
@@ -33,10 +41,11 @@ module.exports = {
 				const time = Object.values(messages[i])[1];
 
 				const userId = Object.values(messages[i])[2];
-				const userRes = await sql.query`SELECT username FROM dbo.Users WHERE id = ${userId};`;
+				const userRes = await sql.query`DECLARE @user_id INT = ${userId};
+												SELECT display_name FROM dbo.Users WHERE id = @user_id;`;
 				const user = Object.values(Object.values(userRes.recordset)[0])[0];
 
-				reply = reply + `\n(${time})   (${user})    ${mes}`;
+				reply = reply + `\n( ${time} )   ( ${user} )    ${mes}`;
 			}
 			return await interaction.reply(`Chats from ${date}: ${reply}`);
 		} catch(error) {
