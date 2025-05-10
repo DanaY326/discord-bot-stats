@@ -11,10 +11,8 @@ module.exports = {
 		//console.log(serverName);
 
 		try {
-			const result = await sql.query`DECLARE @guild NVARCHAR(255); 
-												DECLARE @server_id INT; 
-												SET @guild = ${serverName}; 			
-												SET @server_id = (SELECT id FROM dbo.Guilds WHERE guild_name = @guild); 
+			const result = await sql.query`DECLARE @guild NVARCHAR(255) = ${serverName}; 
+												DECLARE @server_id INT = (SELECT id FROM dbo.Guilds WHERE guild_name = @guild); 
 												
 												SELECT TOP 1 message, LEN(message) 
 													FROM dbo.Messages 
