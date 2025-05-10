@@ -15,6 +15,7 @@ module.exports = {
 		const memberCount = `${interaction.guild.memberCount}`;
 		const value = 1;
 		const date = interaction.options.getString('date', true);
+		//console.log(date);
 
 		try {
 			const result = await sql.query`DECLARE @date_start SMALLDATETIME = ${date};
