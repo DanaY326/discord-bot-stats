@@ -10,8 +10,9 @@ global.client = new Client({
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildMembers,
 	],
-	object: ["MESSAGE_CREATE"],
+	object: ["MESSAGE_CREATE", "GUILD_MEMBER_ADD"],
 });
 
 client.cooldowns = new Collection();
