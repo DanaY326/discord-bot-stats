@@ -1,0 +1,41 @@
+USE MASTER;
+GO
+
+CREATE DATABASE [discord-messages-1];
+
+USE [discord-messages-1];
+GO
+
+CREATE TABLE dbo.Guilds (
+    id INT IDENTITY(1, 1) NOT NULL,,
+    CONSTRAINT PK_discord-messages_id PRIMARY KEY CLUSTERED (id),
+    guild_name NVARCHAR(255) NOT NULL
+);
+
+CREATE TABLE dbo.Users (
+    id INT IDENTITY(1, 1) NOT NULL,,
+    CONSTRAINT PK_discord-messages_id PRIMARY KEY CLUSTERED (id),
+    user_name NVARCHAR(255) NOT NULL,
+    display_name NVARCHAR(255) NOT NULL
+);
+
+CREATE TABLE dbo.Messages (
+    id INT IDENTITY(1, 1) NOT NULL,,
+    CONSTRAINT PK_discord-messages_id PRIMARY KEY CLUSTERED (id),
+    user_id INT NOT NULL,
+    guild_id INT NOT NULL,
+    date_sent SMALLDATETIME NOT NULL,
+    message NVARCHAR(255) NOT NULL
+);
+
+ALTER TABLE dbo.Messages
+ADD CONSTRAINT FK_discord-messages_user_id FOREIGN KEY (user_id)
+REFERENCES dbo.Users (id)
+   ON DELETE CASCADE
+   ON UPDATE CASCADE;
+
+ALTER TABLE dbo.Messages
+ADD CONSTRAINT FK_discord-messages_guild_id FOREIGN KEY (guild_id)
+REFERENCES dbo.Guilds (id)
+   ON DELETE CASCADE
+   ON UPDATE CASCADE;
