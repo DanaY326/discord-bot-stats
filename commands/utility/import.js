@@ -52,7 +52,7 @@ module.exports = {
 
 				do {
 					await channel.messages
-						.fetch({ limit: 100, before: ptr.id, after: date_begin})
+						.fetch({ limit: 100, before: ptr.id}) //add date or other if statement??
 						.then(messages => {
 							messages.forEach(message => {
 								//console.log(message);
