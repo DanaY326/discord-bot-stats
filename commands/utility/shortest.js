@@ -17,6 +17,7 @@ module.exports = {
 												SELECT TOP 1 message, LEN(message) 
 													FROM dbo.Messages 
 													WHERE guild_id = @server_id 
+														AND message NOT LIKE 'https://tenor.com/view/%'
 													ORDER BY LEN(message) ASC, message ASC;`;
 			console.log(result);
 			const message = Object.values(result.recordset[0]);
