@@ -21,7 +21,7 @@ module.exports = {
 			await sql.query`DECLARE @guild NVARCHAR(255) = ${interaction.guild.name};
 												
 												IF NOT EXISTS 
-												(SELECT * FROM dbo.Guilds 
+												(SELECT 1 FROM dbo.Guilds 
 												 WHERE guild_name = @guild)
 												BEGIN 
 													INSERT INTO dbo.Guilds 
@@ -53,22 +53,23 @@ module.exports = {
 								console.log(message);
 								if (!message.author.bot) {
 									const localTimeStamp = message.createdTimestamp / 1000 - timeDiffSec;
-									
-									sql.query`DECLARE @mes NVARCHAR(255) = ${message.content}, 
-														@usr NVARCHAR(255) = ${message.author.username}, 
-														@guild NVARCHAR(255) = ${interaction.guild.name}, 
-														@ts BIGINT = ${localTimeStamp}, 
-														@guild_id INT, 
-														@usr_id INT, 
-														@dt SMALLDATETIME;
 
-												SELECT @usr_id = id FROM dbo.Users WHERE user_name = @usr;
-												SET @dt = DATEADD(minute, @ts / 60, '1970/01/01 00:00');													
+									console.log(message.content);
+									
+									sql.query`DECLARE @mes NVARCHAR(255) = ${message.content}; 
+												DECLARE @usr NVARCHAR(255) = ${message.author.username}; 
+												DECLARE @guild NVARCHAR(255) = ${interaction.guild.name}; 
+												DECLARE @ts BIGINT = ${localTimeStamp}; 
+												DECLARE @dt SMALLDATETIME = DATEADD(minute, @ts / 60, '1970/01/01 00:00'); 
+												DECLARE @guild_id INT, 
+														@usr_id INT;
+
+												SELECT @usr_id = id FROM dbo.Users WHERE user_name = @usr;							
 												SELECT @guild_id = id FROM dbo.Guilds WHERE guild_name = @guild;
 												
 												IF NOT EXISTS 
-												(SELECT * FROM dbo.Messages 
-												 WHERE message = @mes 
+													(SELECT 1 FROM dbo.Messages 
+												 	WHERE message = @mes 
 												 		AND user_id = @usr_id 
 														AND date_sent = @dt 
 														AND guild_id = @guild_id)
