@@ -3,6 +3,8 @@ const sql = require("mssql");
 
 const { sqlLogin } = require("../config.json");
 const { sqlPassword } = require("../config.json");
+const { sqlServer } = require("../config.json");
+const { sqlPort } = require("../config.json");
 
 // When the client is ready, run this code (only once).
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
@@ -14,14 +16,9 @@ module.exports = {
 		var config = {
 			"user": sqlLogin, // Database username
 			"password": sqlPassword, // Database password
-			"server": "danascomputer", // Server IP address
+			"server": sqlServer, // Server IP address
 			"database": "discord-messages", // Database name,
-			"port": 1433,
-			pool: {
-			  max: 10,
-			  min: 0,
-			  idleTimeoutMillis: 30000
-			},
+			"port": sqlPort,
 			"options": {
 				"encrypt": true, 
 	        	trustServerCertificate: true
