@@ -22,9 +22,9 @@ module.exports = {
 												 WHERE guild_name = @guild)
 												BEGIN 
 													INSERT INTO dbo.Guilds 
-														(guild_name, kind) 
+														(guild_name) 
 													VALUES 
-														(@guild, 'SV') 
+														(@guild) 
 												END;`;
 											
 			/*await interaction.guild.members.fetch()
