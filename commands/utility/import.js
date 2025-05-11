@@ -11,9 +11,6 @@ module.exports = {
 		.setDescription('Imports message data from the server!'),
 	async execute(interaction) {
 		await interaction.deferReply();
-		const countObj = await sql.query`SELECT date_sent FROM dbo.Messages;`;
-		const count = Object.values(countObj.recordset[0])[0];
-		const date = (count == 0) ? 0 : new Date(countObj.recordset[0].date_sent);
 		
 		const memberCount = `${interaction.guild.memberCount}`;
 		try {
@@ -30,16 +27,24 @@ module.exports = {
 														(@guild, 'SV') 
 												END;`;
 											
-			/*interaction.guild.members.fetch()
+			/*await interaction.guild.members.fetch()
 				.then(member => {
-				//console.log(member);
+				console.log(member);
 			})*/
 
 			let guildIdReal = interaction.guild.id;
 			
 			let channels = client.channels.cache.filter(ch => {
 				return ch.guild.id === guildIdReal && ch.lastMessageId != null;
-			})
+			})			
+			
+			const dateObj = await sql.query`SELECT TOP 1 date_sent FROM dbo.Messages ORDER BY date_sent DESC;`;
+			console.log(dateObj);
+			var date_begin = Object.values(dateObj.recordset[0])[0];
+			if (date_begin == null) {
+				date_begin = '1970-01-01 00:00';
+			}
+			console.log(date_begin);
 
 			for await (let channelArr of channels) {
 				const channel = channelArr[1];
@@ -47,14 +52,14 @@ module.exports = {
 
 				do {
 					await channel.messages
-						.fetch({ limit: 100, before: ptr.id })
+						.fetch({ limit: 100, before: ptr.id, after: date_begin})
 						.then(messages => {
 							messages.forEach(message => {
-								console.log(message);
+								//console.log(message);
 								if (!message.author.bot) {
 									const localTimeStamp = message.createdTimestamp / 1000 - timeDiffSec;
 
-									console.log(message.content);
+									//console.log(message.content);
 									
 									sql.query`DECLARE @mes NVARCHAR(255) = ${message.content}; 
 												DECLARE @usr NVARCHAR(255) = ${message.author.username}; 
