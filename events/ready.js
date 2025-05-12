@@ -14,15 +14,17 @@ module.exports = {
     once: true,
     execute(client) {
 		var config = {
-			"user": sqlLogin, // Database username
-			"password": sqlPassword, // Database password
-			"server": sqlServer, // Server IP address
-			"database": "discord-messages", // Database name,
-			"port": sqlPort,
-			"options": {
-				"encrypt": true, 
-	        	trustServerCertificate: true
-			}
+			user: sqlLogin, // Database username
+			password: sqlPassword, // Database password
+			server: sqlServer, // Server IP address
+			database: "discord-messages", // Database name,
+			port: sqlPort,
+			options: {
+				encrypt: true, 
+	        	trustServerCertificate: true,
+				connectionTimeout: 15000,
+                requestTimeout: 15000
+            }
 		}
 
 		try {

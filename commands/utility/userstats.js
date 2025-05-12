@@ -16,9 +16,20 @@ module.exports = {
 			const numMessagesUsersRes = await sql.query`DECLARE @guild NVARCHAR(255) = ${serverName}; 
 													DECLARE @server_id INT = (SELECT id FROM dbo.Guilds WHERE guild_name = @guild); 
 													SELECT COUNT(DISTINCT user_id), COUNT(id) FROM dbo.Messages WHERE guild_id = @server_id`;
+
+			console.log(Object.values(numMessagesUsersRes.recordset[0]));
+
 			const numMesUsrResArr = Object.values(numMessagesUsersRes.recordset[0])[0];
 			const numUsers = numMesUsrResArr[0];
 			const numMessages = numMesUsrResArr[1];
+
+			if (numMessages === 0) {
+				return interaction.reply({content: 'No messages found.', flags: MessageFlags.Ephemeral});
+			}
+
+			if (numUsers === 0) {
+				return interaction.reply({content: 'No users found.', flags: MessageFlags.Ephemeral});
+			}
 
 			const top = Math.min(numUsers, interaction.options.getInteger('number_of_users') ??  10);
 			if (top <= 0) {
