@@ -1,5 +1,5 @@
 const { Events } = require('discord.js');
-/*const sql = require("mssql");
+const sql = require("mssql");
 
 const { sqlLogin } = require("../config.json");
 const { sqlPassword } = require("../config.json");
@@ -28,10 +28,10 @@ module.exports = {
 		}
 
 		try {
-			/*sql.connect(config, err => {
+			sql.connect(config, err => {
 			 if (err) {
 				throw err;
-			 }});*/
+			 }});
 			 console.log(`Ready! Logged in as ${client.user.tag}`);
 		} catch(error) {
             console.error(error);
