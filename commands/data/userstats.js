@@ -13,25 +13,39 @@ module.exports = {
         const serverName = `${interaction.guild.name}`;
 
 		try {
-			const numMessagesRes = await sql.query`SELECT COUNT(id) FROM dbo.Messages`;
-			const numMessages = Object.values(numMessagesRes.recordset[0]);
-			//console.log(numMessages);
-			
-			const numUsersRes = await sql.query`SELECT COUNT(DISTINCT userId) FROM dbo.Messages`;
-			//console.log(numUsersRes);
-			const numUsers = Object.values(numUsersRes.recordset[0]);
-			console.log(numUsers);
+			const numMessagesUsersRes = await sql.query`DECLARE @guild NVARCHAR(255) = ${serverName}; 
+													DECLARE @server_id INT = (SELECT id FROM dbo.Guilds WHERE guild_name = @guild); 
+													SELECT COUNT(DISTINCT user_id), COUNT(id) FROM dbo.Messages WHERE guild_id = @server_id`;
+
+			const numMesUsrResArr = Object.values(numMessagesUsersRes.recordset[0])[0];
+			const numUsers = numMesUsrResArr[0];
+			const numMessages = numMesUsrResArr[1];
+
+			if (numMessages === 0) {
+				return interaction.reply({content: 'No messages found in server.', flags: MessageFlags.Ephemeral});
+			}
+
+			if (numUsers === 0) {
+				return interaction.reply({content: 'No users found in server.', flags: MessageFlags.Ephemeral});
+			}
 
 			const top = Math.min(numUsers, interaction.options.getInteger('number_of_users') ??  10);
-			//console.log(top);
 			if (top <= 0) {
 				return interaction.reply({content: `No data available for "number_of_users" less than 1!`, flags: MessageFlags.Ephemeral});
 			}
 			
-			result = await sql.query`DECLARE @topNum int; SET @topNum = ${top}; SELECT TOP (@topNum) userId, COUNT(userId) AS numMes FROM dbo.Messages GROUP BY userId ORDER BY COUNT(userId) DESC;`;
-			//console.log(result);
+			result = await sql.query`DECLARE @topNum int = ${top}; 
+										DECLARE @guild NVARCHAR(255) = ${serverName}; 
+										DECLARE @server_id INT = (SELECT id FROM dbo.Guilds WHERE guild_name = @guild); 	
+												
+										SELECT 
+											TOP (@topNum) user_id, COUNT(user_id) 
+												AS numMes 
+											FROM dbo.Messages 
+											WHERE guild_id = @server_id
+											GROUP BY user_id 
+											ORDER BY COUNT(user_id) DESC;`;
 			const messages = Object.values(result.recordset);
-			//console.log(messages);
 			const len = messages.length;
 			var reply = '';
 			if (len == 0) {
@@ -39,14 +53,13 @@ module.exports = {
 			}
 			for (let i = 0; i < len; ++i) {
 				const userId = Object.values(messages[i])[0];
-				const userArr = await sql.query`SELECT userName FROM dbo.Users WHERE id = ${userId};`
-				//console.log(userArr);
+				const userArr = await sql.query`DECLARE @usr_id int = ${userId}; 
+												SELECT display_name FROM dbo.Users WHERE id = @usr_id;`
 				const userObj = Object.values(userArr.recordset)[0];
-				//console.log(userObj);
 
 				const mesNum = Object.values(messages[i])[1];
 
-				reply = reply + `\n(${mesNum / numMessages * 100}%)       ${Object.values(userObj)}`;
+				reply = reply + `\n(${Math.round(mesNum / numMessages * 1000) / 10}%)       ${Object.values(userObj)}`;
 			}
 			if (top == numUsers) {
 				return await interaction.reply(`${top} active user(s) by percentages of messages: ${reply}`);

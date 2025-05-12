@@ -1,0 +1,11 @@
+USE [discord-messages]
+GO
+
+/****** Object:  User [dana]    Script Date: 2025-05-11 11:01:38 AM ******/
+-- Replace [dana] with your desired username
+CREATE USER [dana] FOR LOGIN [dana] WITH DEFAULT_SCHEMA=[dbo]
+GO
+ALTER ROLE [db_owner] ADD MEMBER [dana]
+GO
+
+-- Then encrypt [discord-messages] if desired.
