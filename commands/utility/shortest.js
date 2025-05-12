@@ -18,9 +18,13 @@ module.exports = {
 													FROM dbo.Messages 
 													WHERE guild_id = @server_id 
 														AND message NOT LIKE 'https://tenor.com/view/%'
+														AND NOT message = ''
 													ORDER BY LEN(message) ASC, message ASC;`;
-			console.log(result);
-			const message = Object.values(result.recordset[0]);
+			mesObj = result.recordset[0];
+			if (mesObj == null) {
+				return await interaction.reply(`No messages found in server.`);
+			}
+			const message = Object.values(mesObj);
 			return await interaction.reply(`The shortest message in ${serverName} is '${message[0]}' with length ${message[1]}!`);
 		} catch(error) {
 			console.error(error);

@@ -8,7 +8,6 @@ module.exports = {
 		.setDescription('Returns the longest message in the server!'),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
-		//console.log(serverName);
 
 		try {
 			const result = await sql.query`DECLARE @guild NVARCHAR(255) = ${serverName}; 
@@ -18,8 +17,8 @@ module.exports = {
 													FROM dbo.Messages 
 													WHERE guild_id = @server_id 
 														AND message NOT LIKE 'https://tenor.com/view/%'
+														AND NOT message = ''
 													ORDER BY LEN(message) DESC, message DESC;`;
-			//console.log(result);
 			mesObj = result.recordset[0];
 			if (mesObj == null) {
 				return await interaction.reply(`No messages found in server.`);

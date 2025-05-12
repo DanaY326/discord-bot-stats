@@ -12,10 +12,7 @@ module.exports = {
 				.setRequired(true)),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
-		const memberCount = `${interaction.guild.memberCount}`;
-		const value = 1;
 		const date = interaction.options.getString('date', true);
-		//console.log(date);
 
 		try {
 			const result = await sql.query`DECLARE @date_start SMALLDATETIME = ${date};
@@ -29,9 +26,7 @@ module.exports = {
 														AND date_sent >= @date_start
 														AND date_sent <= DATEADD(minute, 59, DATEADD(hour, 23, @date_start))
 													ORDER BY date_sent;`;
-			//console.log(result);
 			const messages = Object.values(result.recordset);
-			//console.log(messages);
 			const len = messages.length;
 			var reply = '';
 			if (len == 0) {
