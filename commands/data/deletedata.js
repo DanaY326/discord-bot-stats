@@ -18,7 +18,6 @@ module.exports = {
                 return await interaction.reply('No data found for this server!');
             }
             server_id = Object.values(serverIdArr[0])[0];
-            console.log(server_id);
 
             const result = await sql.query`DECLARE @server_id INT = ${server_id};
 												
@@ -26,10 +25,8 @@ module.exports = {
 													FROM dbo.Memberships 
 													WHERE guild_id = @server_id;`
             const resultArr = result.recordset;
-            console.log(resultArr);
             for (const userIdObj of resultArr) {
                 const userId = Object.values(userIdObj)[0];
-                console.log(userId);
                 await sql.query`DECLARE @user_id INT = ${userId};
                                 
                                 DELETE FROM dbo.Users 

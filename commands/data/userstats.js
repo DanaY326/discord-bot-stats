@@ -17,8 +17,6 @@ module.exports = {
 													DECLARE @server_id INT = (SELECT id FROM dbo.Guilds WHERE guild_name = @guild); 
 													SELECT COUNT(DISTINCT user_id), COUNT(id) FROM dbo.Messages WHERE guild_id = @server_id`;
 
-			console.log(Object.values(numMessagesUsersRes.recordset[0]));
-
 			const numMesUsrResArr = Object.values(numMessagesUsersRes.recordset[0])[0];
 			const numUsers = numMesUsrResArr[0];
 			const numMessages = numMesUsrResArr[1];

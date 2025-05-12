@@ -8,7 +8,6 @@ module.exports = {
 		.setDescription('Returns the shortest message in the server!'),
     async execute(interaction) {
         const serverName = `${interaction.guild.name}`;
-		const memberCount = `${interaction.guild.memberCount}`;
 
 		try {
 			const result = await sql.query`DECLARE @guild NVARCHAR(255) = ${serverName}; 

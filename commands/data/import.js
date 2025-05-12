@@ -83,15 +83,13 @@ module.exports = {
 			
 			//finds date of latest uploaded message - goal is to use to implement a way to speed up importing new messages
 			/*const dateObj = await sql.query`SELECT TOP 1 date_sent FROM dbo.Messages ORDER BY date_sent DESC;`;
-			//console.log(dateObj);
 			var dateArr = dateObj.recordset;
 			var date_begin;
 			if (dateArr.length === 0) {
 				date_begin = '1970-01-01 00:00';
 			} else {
 				date_begin = Object.values(dateArr[0])[0];
-			}
-			//console.log(date_begin);*/
+			}*/
 
 			//imports messages
 			for await (let channelArr of channels) {
@@ -105,37 +103,31 @@ module.exports = {
 							messages.forEach(message => {
 								
 								if (!message.author.bot) {
-									try {
-										const localTimeStamp = message.createdTimestamp / 1000 - timeDiffSec;
-										
-										sql.query`DECLARE @mes NVARCHAR(255) = ${message.content}; 
-													DECLARE @usr NVARCHAR(255) = ${message.author.username}; 
-													DECLARE @guild NVARCHAR(255) = ${interaction.guild.name}; 
-													DECLARE @ts BIGINT = ${localTimeStamp}; 
-													DECLARE @dt SMALLDATETIME = DATEADD(minute, @ts / 60, '1970/01/01 00:00'); 
-													DECLARE @guild_id INT, 
-															@usr_id INT;
+									const localTimeStamp = message.createdTimestamp / 1000 - timeDiffSec;
+									
+									sql.query`DECLARE @mes NVARCHAR(255) = ${message.content}; 
+												DECLARE @usr NVARCHAR(255) = ${message.author.username}; 
+												DECLARE @guild NVARCHAR(255) = ${interaction.guild.name}; 
+												DECLARE @ts BIGINT = ${localTimeStamp}; 
+												DECLARE @dt SMALLDATETIME = DATEADD(minute, @ts / 60, '1970/01/01 00:00'); 
+												DECLARE @guild_id INT, 
+														@usr_id INT;
 
-													SELECT @usr_id = id FROM dbo.Users WHERE user_name = @usr;							
-													SELECT @guild_id = id FROM dbo.Guilds WHERE guild_name = @guild;
-													
-													IF NOT EXISTS 
-														(SELECT 1 FROM dbo.Messages 
-														WHERE message = @mes 
-															AND user_id = @usr_id 
-															AND date_sent = @dt 
-															AND guild_id = @guild_id)
-													BEGIN 
-														INSERT INTO dbo.Messages 
-															(message, user_id, date_sent, guild_id) 
-														VALUES 
-															(@mes, @usr_id, @dt, @guild_id) 
-													END;`;
-									} catch(error) {
-										console.error(error);
-										console.log(`Error:\n\`${error.message}\``);
-										return interaction.reply({content: `There was an error uploading message ${message.content}!`, flags: MessageFlags.Ephemeral});
-									}
+												SELECT @usr_id = id FROM dbo.Users WHERE user_name = @usr;							
+												SELECT @guild_id = id FROM dbo.Guilds WHERE guild_name = @guild;
+												
+												IF NOT EXISTS 
+													(SELECT 1 FROM dbo.Messages 
+													WHERE message = @mes 
+														AND user_id = @usr_id 
+														AND date_sent = @dt 
+														AND guild_id = @guild_id)
+												BEGIN 
+													INSERT INTO dbo.Messages 
+														(message, user_id, date_sent, guild_id) 
+													VALUES 
+														(@mes, @usr_id, @dt, @guild_id) 
+												END;`;
 
 								}
 							})

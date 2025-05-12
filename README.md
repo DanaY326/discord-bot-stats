@@ -1,9 +1,9 @@
 # Message Analyzer Discord Bot
-This is a Discord Bot that will read your messages and return insights! What's the longest message in your server? Who texts the most on the server? What was said on your birthday last year? Find out the answer to all of these questions! [Be sure to include a link and a screenshot (we're front end devs so we can actually see our work!).]
+This is a Discord Bot that will read your messages and return insights! What's the longest message in your server? Who texts the most on the server? What was said on your birthday last year? Find out the answer to all of these questions! 
 
-**Link to project:** http://recruiters-love-seeing-live-demos.com/
+**Link to project:** [video link coming soon!]
 
-![alt tag](http://placecorgi.com/1200/650)
+![alt tag](video link soon!)
 
 ## How It's Made:
 
@@ -18,5 +18,9 @@ This is a Discord Bot that will read your messages and return insights! What's t
 
 ## Lessons Learned:
 
-[No matter what your experience level, being an engineer means continuously learning. Every time you build something you always have those *whoa this is awesome* or *wow I actually did it!* moments. This is where you should share those moments! Recruiters and interviewers love to see that you're self-aware and passionate about growing.]
+This is the first time I've made my own app from top to bottom. One thing I'm glad I got in the habit of was organizing everything in this repository into folders, as the amount of files just kept increasing! Testing was also super important, there were little bug fixes or tweaks that I'd make, and I thought there was *no way* they could affect anything, and  yet when I retested, I would have a new bug to find! 
+
+## Setup Instructions:
+
+
 
