@@ -30,25 +30,53 @@ module.exports = {
 											
 			
 			const membersFetch = await interaction.guild.members.fetch()
-				.then(members => {members.forEach(member => {
-					if (!member.user.bot) {
-							console.log(member);
-							sql.query`DECLARE @user_name NVARCHAR(255) = ${member.user.username};
-										DECLARE @display_name NVARCHAR(255) = ${member.user.globalName};
-												
-												IF NOT EXISTS 
-												(SELECT 1 FROM dbo.Users 
-												 WHERE user_name = @user_name
-												 	AND display_name = @display_name)
-												BEGIN 
+				.then(members => {
+					for (const memberArr of members) {
+						const member = memberArr[1];
+						console.log(member);
+						if (!member.user.bot) {
+								console.log(member.user.username);
+								console.log(member.user.globalName);
+								sql.query`DECLARE @user_name NVARCHAR(255) = ${member.user.username};
+											DECLARE @display_name NVARCHAR(255) = ${member.user.globalName};
+													
+													IF EXISTS 
+													(SELECT 1 FROM dbo.Users 
+													WHERE user_name = @user_name
+														AND display_name = @display_name)
+													BEGIN
+														SET NOEXEC ON;
+													END;
 													INSERT INTO dbo.Users 
-														(user_name, display_name) 
-													VALUES 
-														(@user_name, @user_name) 
-												END;`;
+															(user_name, display_name) 
+														VALUES 
+															(@user_name, @display_name);
+													SET NOEXEC OFF`;
+								sql.query`DECLARE @user_name NVARCHAR(255) = ${member.user.username};												
+													DECLARE @guild NVARCHAR(255) = ${interaction.guild.name};
+
+													DECLARE @user_id INT,
+															@guild_id INT;
+															
+													SELECT @user_id = id FROM dbo.Users WHERE user_name = @user_name;
+													SELECT @guild_id = id FROM dbo.Guilds WHERE guild_name = @guild;
+													
+													IF EXISTS 
+													(SELECT 1 FROM dbo.Memberships 
+													WHERE user_id = @user_id
+														AND guild_id = @guild_id)
+													BEGIN
+														SET NOEXEC ON;
+													END;
+
+													INSERT INTO dbo.Memberships 
+															(user_id, guild_id) 
+														VALUES 
+															(@user_id, @guild_id);
+													SET NOEXEC OFF`;
 						}
 						
-					})})
+					}})
  				.catch(console.error);
 
 			let guildIdReal = interaction.guild.id;
@@ -128,7 +156,7 @@ module.exports = {
 		} catch(error) {
 			console.error(error);
 			console.log(`Error:\n\`${error.message}\``);
-            interaction.editReply({content: `There was an error while executing this command!`, flags: MessageFlags.Ephemeral});
+            interaction.editReply({content: `There was an error while executing this command!`});
 		}
 		//return interaction.reply('Whoa');
 		
