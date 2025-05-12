@@ -24,11 +24,11 @@ module.exports = {
 			const numMessages = numMesUsrResArr[1];
 
 			if (numMessages === 0) {
-				return interaction.reply({content: 'No messages found.', flags: MessageFlags.Ephemeral});
+				return interaction.reply({content: 'No messages found in server.', flags: MessageFlags.Ephemeral});
 			}
 
 			if (numUsers === 0) {
-				return interaction.reply({content: 'No users found.', flags: MessageFlags.Ephemeral});
+				return interaction.reply({content: 'No users found in server.', flags: MessageFlags.Ephemeral});
 			}
 
 			const top = Math.min(numUsers, interaction.options.getInteger('number_of_users') ??  10);
