@@ -24,8 +24,8 @@ This is the first time I've made my own app from top to bottom. Testing was supe
 
 1. Ensure that necessary software is installed. These are Node.js, SQL Server 2022 Developer, and SQL Server Management Studio.
 2. Pull the source code.
-3. Run the SQL scripts under the folder sql_scripts in numerical order. For the second script, which is optional replace the username with your desired username and enable encryption if desired before running the third script.
-4. Sign into or create a Discord account and create a bot on the developper portal. Give it the Server Members Intent and the Message Content Intent. Create a config file in the same folder as the source code with the following:
+3. Run the SQL scripts under the folder sql_scripts in numerical order. For the second script, which is optional, replace the username with your desired username. After running the second script, enable encryption in SSMS if desired before running the third script.
+4. Sign into or create a Discord account and create a bot on the developper portal. Give it the Server Members Intent and the Message Content Intent. Create a config file with the following:
 {
     "token": "XXXXXXXXX",
     "clientId": "XXXXXXXXX",
