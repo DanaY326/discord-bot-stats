@@ -32,7 +32,7 @@ This is the first time I've made my own app from top to bottom. Testing was supe
     "guildId": "XXXXXXXXX",
     "sqlLogin": "XXXXXXXXX",
     "sqlPassword": "XXXXXXXXX",
-    "sqlServer": "XXXXXXXXX",
+    "sqlServer": "XXXXXXXXX", //name of the server where your SQL database is hosted
     "sqlPort": XXXX
 }
 5. Deploy commands by running "node deploy.js", then start the app by running "node index.js".
