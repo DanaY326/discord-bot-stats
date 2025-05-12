@@ -12,7 +12,6 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.deferReply();
 		
-		const memberCount = `${interaction.guild.memberCount}`;
 		try {
 
 			//imports guild if not already found in database
@@ -28,15 +27,12 @@ module.exports = {
 														(@guild) 
 												END;`;
 											
-			
+			//imports users and updates membership relationships if user not yet in database
 			const membersFetch = await interaction.guild.members.fetch()
 				.then(members => {
 					for (const memberArr of members) {
 						const member = memberArr[1];
-						console.log(member);
 						if (!member.user.bot) {
-								console.log(member.user.username);
-								console.log(member.user.globalName);
 								sql.query`DECLARE @user_name NVARCHAR(255) = ${member.user.username};
 											DECLARE @display_name NVARCHAR(255) = ${member.user.globalName};
 													
@@ -85,7 +81,8 @@ module.exports = {
 				return ch.guild.id === guildIdReal && ch.lastMessageId != null;
 			})			
 			
-			const dateObj = await sql.query`SELECT TOP 1 date_sent FROM dbo.Messages ORDER BY date_sent DESC;`;
+			//finds date of latest uploaded message - goal is to use to implement a way to speed up importing new messages
+			/*const dateObj = await sql.query`SELECT TOP 1 date_sent FROM dbo.Messages ORDER BY date_sent DESC;`;
 			//console.log(dateObj);
 			var dateArr = dateObj.recordset;
 			var date_begin;
@@ -94,25 +91,22 @@ module.exports = {
 			} else {
 				date_begin = Object.values(dateArr[0])[0];
 			}
-			//console.log(date_begin);
+			//console.log(date_begin);*/
 
+			//imports messages
 			for await (let channelArr of channels) {
 				const channel = channelArr[1];
 				let ptr = channel.lastMessageId;
 
 				do {
 					await channel.messages
-						.fetch({ limit: 100, before: ptr.id}) //add date or other if statement??
+						.fetch({ limit: 100, before: ptr.id})
 						.then(messages => {
 							messages.forEach(message => {
 								
-
-								//console.log(message);
 								if (!message.author.bot) {
 									try {
 										const localTimeStamp = message.createdTimestamp / 1000 - timeDiffSec;
-
-										//console.log(message.content);
 										
 										sql.query`DECLARE @mes NVARCHAR(255) = ${message.content}; 
 													DECLARE @usr NVARCHAR(255) = ${message.author.username}; 
@@ -158,7 +152,6 @@ module.exports = {
 			console.log(`Error:\n\`${error.message}\``);
             interaction.editReply({content: `There was an error while executing this command!`});
 		}
-		//return interaction.reply('Whoa');
 		
 	},
 };
