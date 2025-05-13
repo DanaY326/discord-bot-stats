@@ -21,7 +21,7 @@ module.exports = {
 													ORDER BY LEN(message) DESC, message DESC;`;
 			mesObj = result.recordset[0];
 			if (mesObj == null) {
-				return await interaction.reply(`No messages found in server.`);
+				return await interaction.reply({content: `No messages found in server.`, flags: MessageFlags.Ephemeral});
 			}
 			const message = Object.values(mesObj);
 			return await interaction.reply(`The longest message in ${serverName} is '${message[0]}' with length ${message[1]}!`);
