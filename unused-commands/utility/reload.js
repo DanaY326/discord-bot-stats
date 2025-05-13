@@ -1,3 +1,7 @@
+// This command reloads a command from the commands folder.
+// It is used to update the command inside Discord rather than restarting the bot.
+// It is not used in the bot, but it is useful for development.
+
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
