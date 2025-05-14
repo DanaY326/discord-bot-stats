@@ -1,24 +1,29 @@
 # Message Analyzer Discord Bot
 This is a Discord Bot that will read your messages and return insights! What's the longest message in your server? Who texts the most on the server? What was said on your birthday last year? Find out the answer to all of these questions! 
 
-**Link to project:** [video link coming soon!]
-
-![alt tag](video link soon!)
+**Links to project video:**  
+[YouTube](https://youtu.be/wtS_HhTXwjk) or [Github](https://github.com/DanaY326/discord-bot-stats/blob/main/videos/discord-bot-stats-video-plain.mp4)
 
 ## How It's Made:
 
 **Tech used:** JavaScript, Node.js, Discord.js, mssql, Transact-SQL, SQL Server Management Studio
 
-I used Node.js and Discord.js to create the framework of the Discord bot and connect to the Discord API repectively. I created 10 commands in separate nodes in the program. I created an API for the Node.js app to link with an SQL database using the mssql Node.js package. Some of the 10 commands include those to import and delete message history, and ones that take advantage of various other commands that are possible in SQL (fromdate that filters by date, userstats that returns overall data that can be graphed, and lognest and shortest). SQL Server Management Studio was a valuable tool especially when setting up and testing the API to connect to the database from the Node.js app.
+I used Node.js as the framework. Discord.js was used to connect to the Discord API to retrieve over 5 data points, such as server names, members, and message dates, authors and content. The API was also used to interact with the user, through receiving commands and outputting information in the Discord interface. Several specific features of the API were used, such as returning Ephemereal error messages that could only be seen by the calling user and that could be easily deleted, taking options for commands, and implementing a cooldown. I also created an API for the Node.js app to link with an SQL database using the mssql Node.js package. SQL Server Management Studio was a valuable tool especially when setting up and testing the API to connect to the database from the Node.js app.  
+I developed 10 separate commands. These include:
+* import, which connects to the Discord API to retrieve all necessary data related to the server, including name, members and message history, and "uploads" the data to the SQL Server
+* userstats, which ranks the contributers in a server through percentage of messages sent through SELECT queries on both the Users and Messages tables
+* fromdate, which filters the messages to return messages from only a specific date (fun for birthdays etc.) after converting the timestamp returned by the Discord API to a SQL-friendly date format
+* longest and shortest, which find the longest and shortest messages in a server
+* deletedata, which deletes all data related to a specific guild fromt he SQL Server
 
 
 ## Optimizations
 
-Firstly, using a database made all of the data-related commands a lot faster then getting the message history by hand every time. Secondly, I optimized my SQL queries on multiple occasions, such as by using 'SELECT 1 ...' instead of 'SELECT * ...' to check existence of values. 
+Firstly, using a database made all of the data-related commands a lot faster then getting the message history by hand every time. Secondly, I optimized my SQL queries on various occasions, such as by using 'SELECT 1 ...' instead of 'SELECT * ...' to check existence of values. 
 
 ## Lessons Learned:
 
-This is the first time I've made my own app from top to bottom. Testing was super important, there were little bug fixes or tweaks that I'd make, and I thought there was *no way* they could affect anything, and  yet when I retested, I would have a new bug to find! Of course, often there'd be no new bugs, but new ones appeared often enough that I'm happy I thoroughly checked all commands once I got to a certain point. I also feel a lot more comfortable with SQL Server, and with Node.js, and JavaScript in general now. 
+Firstly, I learned the importance of testing your code in various situations, and of always doing a regression test. I also learned how to use a config file, how to work with timestamps and how to work with JavaScript objects. While some of these are niche, I overall just learned a lot about problem solving. I learned how to narrow down problems when debugging, and also when to completely rethink my approach if a feature wasn't working.
 
 ## Setup Instructions:
 
