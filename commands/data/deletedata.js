@@ -28,9 +28,16 @@ module.exports = {
             for (const userIdObj of resultArr) {
                 const userId = Object.values(userIdObj)[0];
                 await sql.query`DECLARE @user_id INT = ${userId};
-                                
-                                DELETE FROM dbo.Users 
-                                    WHERE id = @user_id;`;
+                                DECLARE @server_id INT = ${server_id};
+
+                                IF NOT EXISTS
+                                    (SELECT 1 FROM dbo.Memberships
+                                        WHERE user_id = @user_id
+                                            AND NOT guild_id = @server_id)
+                                BEGIN                
+                                    DELETE FROM dbo.Users 
+                                        WHERE id = @user_id;
+                                END`;
             }
             await sql.query`DECLARE @server_id INT = ${server_id};
                                 
