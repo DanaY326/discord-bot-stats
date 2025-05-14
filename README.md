@@ -1,15 +1,21 @@
 # Message Analyzer Discord Bot
 This is a Discord Bot that will read your messages and return insights! What's the longest message in your server? Who texts the most on the server? What was said on your birthday last year? Find out the answer to all of these questions! 
 
-**Links to project videos:** [YouTube](https://youtu.be/wtS_HhTXwjk)
-
+**Links to project videos:**  
+[YouTube](https://youtu.be/wtS_HhTXwjk)  
 [Github](https://github.com/DanaY326/discord-bot-stats/videos/discord-bot-stats-video-plain.mp4)
 
 ## How It's Made:
 
 **Tech used:** JavaScript, Node.js, Discord.js, mssql, Transact-SQL, SQL Server Management Studio
 
-I used Node.js and Discord.js to create the framework of the Discord bot and connect to the Discord API repectively. I created 10 commands in separate nodes in the program. I created an API for the Node.js app to link with an SQL database using the mssql Node.js package. Some of the 10 commands include those to import and delete message history, and ones that take advantage of various other commands that are possible in SQL (fromdate that filters by date, userstats that returns overall data that can be graphed, and lognest and shortest). SQL Server Management Studio was a valuable tool especially when setting up and testing the API to connect to the database from the Node.js app.
+I used Node.js as the framework. Discord.js was used to connect to the Discord API to retrieve over 5 data points, such as server names, members, and message dates, authors and content. I created an API for the Node.js app to link with an SQL database using the mssql Node.js package. SQL Server Management Studio was a valuable tool especially when setting up and testing the API to connect to the database from the Node.js app.  
+I developed 10 separate commands. These include:
+* import, which connects to the Discord API to retrieve all necessary data related to the server, including name, members and message history, and "uploads" the data to the SQL Server
+* userstats, which ranks the contributers in a server through percentage of messages sent through SELECT queries on both the Users and Messages tables
+* fromdate, which filters the messages to return messages from only a specific date (fun for birthdays etc.) after converting the timestamp returned by the Discord API to a SQL-friendly date format
+* longest and shortest, which find the longest and shortest messages in a server
+* deletedata, which deletes all data related to a specific guild fromt he SQL Server
 
 
 ## Optimizations
