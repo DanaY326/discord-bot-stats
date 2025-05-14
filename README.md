@@ -1,9 +1,8 @@
 # Message Analyzer Discord Bot
 This is a Discord Bot that will read your messages and return insights! What's the longest message in your server? Who texts the most on the server? What was said on your birthday last year? Find out the answer to all of these questions! 
 
-**Links to project videos:**  
-[YouTube](https://youtu.be/wtS_HhTXwjk)  
-[Github](https://github.com/DanaY326/discord-bot-stats/videos/discord-bot-stats-video-plain.mp4)
+**Links to project video:**  
+[YouTube](https://youtu.be/wtS_HhTXwjk) or [Github](https://github.com/DanaY326/discord-bot-stats/videos/discord-bot-stats-video-plain.mp4)
 
 ## How It's Made:
 
