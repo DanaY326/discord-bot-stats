@@ -12,7 +12,7 @@ const { sqlPort } = require("../config.json");
 module.exports = {
     name: Events.ClientReady,
     once: true,
-    execute(client) {
+    async execute(client) {
 		var config = {
 			user: sqlLogin, // Database username
 			password: sqlPassword, // Database password
@@ -28,10 +28,7 @@ module.exports = {
 		}
 
 		try {
-			sql.connect(config, err => {
-			 if (err) {
-				throw err;
-			 }});
+			await sql.connect(config);
 			 console.log(`Ready! Logged in as ${client.user.tag}`);
 		} catch(error) {
             console.error(error);
