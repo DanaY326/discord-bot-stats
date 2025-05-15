@@ -30,7 +30,8 @@ Firstly, I learned the importance of testing your code in various situations, an
 1. Ensure that necessary software is installed. These are Node.js, SQL Server 2022 Developer, and SQL Server Management Studio.
 2. Pull the source code.
 3. Run the SQL scripts under the folder sql_scripts in numerical order. For the second script, which is optional, replace the username with your desired username. After running the second script, enable encryption in SSMS if desired before running the third script.
-4. Sign into or create a Discord account and create a bot on the developper portal. Give it the Server Members Intent and the Message Content Intent. Create a config file with the following:  
+4. Ensure that TCP/IP is enabled for SQL Server.
+5. Sign into or create a Discord account and create a bot on the developper portal. Give it the Server Members Intent and the Message Content Intent. Create a config file with the following:  
 {  
     "token": "XXXXXXXXX",  
     "clientId": "XXXXXXXXX",  
@@ -40,7 +41,7 @@ Firstly, I learned the importance of testing your code in various situations, an
     "sqlServer": "XXXXXXXXX", //name of the server where your SQL database is hosted  
     "sqlPort": XXXX  
 }  
-5. Deploy commands by running "node deploy.js", then start the app by running "node index.js".
-6. Add your bot to servers by generating an invite link on the developper portal.
-7. Use the bot and enjoy!
+6. Deploy commands by running "node deploy.js", then start the app by running "node index.js" and waiting until the confirmation message "Ready! Logged in as [...]" is shown in terminal.
+7. Add your bot to servers by generating an invite link on the Discord Developer Portal.
+8. Use the bot and enjoy!
 
